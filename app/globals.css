@@ -24,3 +24,157 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* --- Hero : animations de l'arc reactor --- */
+
+/* Halo lumineux qui respire derrière le réacteur */
+@keyframes halo-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+/* Micro-respiration du réacteur lui-même */
+@keyframes reactor-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.015);
+  }
+}
+
+/* Flash de bloom au moment de l'allumage (une seule fois) */
+@keyframes bloom-flash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.6);
+  }
+}
+
+/* Fondu d'apparition du titre dès l'arrivée sur le site */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in 1.4s ease-out 0.2s forwards;
+}
+
+/* Entrée verticale de chaque lettre (effet cascade) */
+@keyframes letter-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.7em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: letter-up 0.55s ease-out forwards;
+}
+
+/* Texte rempli de hachures diagonales (style gravure) */
+.text-hatched {
+  background-image: repeating-linear-gradient(
+    45deg,
+    #18181b 0,
+    #18181b 1.5px,
+    transparent 1.5px,
+    transparent 7px
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Indicateur de scroll */
+@keyframes scroll-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
+.animate-halo {
+  animation: halo-pulse 4.5s ease-in-out infinite;
+}
+
+/* Pulsation marquée du halo central (battement) */
+@keyframes core-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+}
+
+.animate-core {
+  animation: core-pulse 2.4s ease-in-out infinite;
+}
+
+.animate-reactor {
+  animation: reactor-pulse 4.5s ease-in-out infinite;
+}
+
+.animate-bloom {
+  animation: bloom-flash 1.2s ease-out forwards;
+}
+
+.animate-scroll-bob {
+  animation: scroll-bob 1.8s ease-in-out infinite;
+}
+
+/* Respect de l'accessibilité : on coupe toutes les animations du hero */
+@media (prefers-reduced-motion: reduce) {
+  .animate-halo,
+  .animate-core,
+  .animate-reactor,
+  .animate-bloom,
+  .animate-scroll-bob {
+    animation: none;
+  }
+
+  .animate-fade-in,
+  .animate-letter {
+    animation: none;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const b=fs.readFileSync\\('public/Image/reacteur_ark_allume_de_fasse.png'\\);console.log\\('PNG',b.readUInt32BE\\(16\\)+'x'+b.readUInt32BE\\(20\\)\\);\")",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 \"public/Video/allumage_reacteur_v1.mp4\")",
+      "Bash(find . -path ./node_modules -prune -o -iname \"*akira*\" -print)",
+      "Bash(find . -path ./node_modules -prune -o -type d -iname \"*font*\" -print)",
+      "Bash(find public *)"
+    ]
+  }
+}
