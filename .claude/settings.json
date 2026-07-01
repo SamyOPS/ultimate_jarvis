@@ -7,7 +7,11 @@
       "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 \"public/Video/allumage_reacteur_v1.mp4\")",
       "Bash(find . -path ./node_modules -prune -o -iname \"*akira*\" -print)",
       "Bash(find . -path ./node_modules -prune -o -type d -iname \"*font*\" -print)",
-      "Bash(find public *)"
+      "Bash(find public *)",
+      "Bash(rm -f app/components/Navbar.tsx)",
+      "Bash(node -e \"const fs=require\\('fs'\\);const b=fs.readFileSync\\('public/test logo.png'\\);console.log\\('dims',b.readUInt32BE\\(16\\)+'x'+b.readUInt32BE\\(20\\)\\);\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s http://localhost:3000/)"
     ]
   }
 }

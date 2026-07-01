@@ -2,7 +2,49 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import Navbar from "./Navbar";
+import Menu from "./Menu";
+
+// Révélation masquée lettre par lettre au chargement (même effet que la citation).
+function RevealText({
+  text,
+  base = 0,
+  step = 0.03,
+  className,
+}: {
+  text: string;
+  base?: number;
+  step?: number;
+  className?: string;
+}) {
+  let idx = -1;
+  const words = text.split(" ");
+  return (
+    <span className={className} aria-label={text}>
+      {words.map((word, wi) => (
+        <span
+          key={wi}
+          className={`inline-block whitespace-nowrap${
+            wi < words.length - 1 ? " mr-[0.25em]" : ""
+          }`}
+        >
+          {[...word].map((char, ci) => {
+            idx += 1;
+            return (
+              <span key={ci} aria-hidden className="reveal-mask">
+                <span
+                  className="reveal-inner"
+                  style={{ animationDelay: `${base + idx * step}s` }}
+                >
+                  {char}
+                </span>
+              </span>
+            );
+          })}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -114,8 +156,25 @@ export default function Hero() {
         />
       )}
 
-      {/* Navbar */}
-      <Navbar />
+      {/* Menu burger + panneau latéral (contient aussi le logo au premier plan) */}
+      <Menu />
+
+      {/* Phrase d'accroche + mots clés, centrés en haut de page */}
+      <div className="pointer-events-none absolute left-1/2 top-10 z-20 flex max-w-2xl -translate-x-1/2 flex-col items-center gap-4 px-4 text-center sm:top-12">
+        <p
+          className="animate-fade-in text-2xl font-semibold leading-snug text-zinc-800 sm:text-4xl"
+          style={{ animationDelay: "0.5s" }}
+        >
+          Propulsez vos projets IT &amp; digital.
+        </p>
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500 sm:text-sm">
+          <RevealText text="Support" base={1.5} step={0.03} />
+          <span className="text-zinc-300">·</span>
+          <RevealText text="Développement" base={1.7} step={0.03} />
+          <span className="text-zinc-300">·</span>
+          <RevealText text="Sécurité" base={2} step={0.03} />
+        </div>
+      </div>
 
       {/* « VI » (6 en chiffres romains), style hachuré, en haut à droite */}
       <span
@@ -123,16 +182,17 @@ export default function Hero() {
         className="pointer-events-none absolute right-8 top-[32%] z-20 -translate-y-1/2 select-none font-sans text-8xl font-bold leading-none tracking-tight sm:right-12 sm:text-[12rem]"
       >
         {["V", "I"].map((char, i) => (
-          <span
-            key={i}
-            className="animate-letter bg-clip-text text-transparent"
-            style={{
-              animationDelay: `${0.6 + i * 0.12}s`,
-              backgroundImage:
-                "repeating-linear-gradient(45deg, #18181b 0, #18181b 1.5px, transparent 1.5px, transparent 7px)",
-            }}
-          >
-            {char}
+          <span key={i} className="reveal-mask">
+            <span
+              className="reveal-inner bg-clip-text text-transparent"
+              style={{
+                animationDelay: `${quoteBaseDelay + i * 0.12}s`,
+                backgroundImage:
+                  "repeating-linear-gradient(45deg, #18181b 0, #18181b 1.5px, transparent 1.5px, transparent 7px)",
+              }}
+            >
+              {char}
+            </span>
           </span>
         ))}
       </span>
@@ -160,15 +220,15 @@ export default function Hero() {
               {[...word].map((char, ci) => {
                 letterIndex += 1;
                 return (
-                  <span
-                    key={ci}
-                    aria-hidden
-                    className="animate-letter"
-                    style={{
-                      animationDelay: `${quoteBaseDelay + letterIndex * quoteStep}s`,
-                    }}
-                  >
-                    {char}
+                  <span key={ci} aria-hidden className="reveal-mask">
+                    <span
+                      className="reveal-inner"
+                      style={{
+                        animationDelay: `${quoteBaseDelay + letterIndex * quoteStep}s`,
+                      }}
+                    >
+                      {char}
+                    </span>
                   </span>
                 );
               })}

@@ -83,22 +83,27 @@ body {
   animation: fade-in 1.4s ease-out 0.2s forwards;
 }
 
-/* Entrée verticale de chaque lettre (effet cascade) */
-@keyframes letter-up {
+/* Révélation masquée : chaque lettre glisse vers le haut depuis sa ligne */
+@keyframes letter-reveal {
   from {
-    opacity: 0;
-    transform: translateY(0.7em);
+    transform: translateY(110%);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 
-.animate-letter {
+.reveal-mask {
   display: inline-block;
-  opacity: 0;
-  animation: letter-up 0.55s ease-out forwards;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.12em;
+}
+
+.reveal-inner {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: letter-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Texte rempli de hachures diagonales (style gravure) */
@@ -172,9 +177,13 @@ body {
     animation: none;
   }
 
-  .animate-fade-in,
-  .animate-letter {
+  .animate-fade-in {
     animation: none;
     opacity: 1;
+  }
+
+  .reveal-inner {
+    animation: none;
+    transform: none;
   }
 }
