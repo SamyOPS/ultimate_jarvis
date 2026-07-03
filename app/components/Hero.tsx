@@ -249,6 +249,7 @@ export default function Hero() {
           Jarvis Connect
         </h1>
       </div>
+
     </section>
   );
 }

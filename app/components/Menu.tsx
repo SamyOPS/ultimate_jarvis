@@ -51,10 +51,9 @@ function RevealChars({
 // Liens principaux (gros, à gauche)
 const mainLinks = [
   { label: "Accueil", href: "/" },
-  { label: "Services", href: "#services" },
-  { label: "Expertise", href: "#expertise" },
+  { label: "Expertises", href: "#expertises" },
+  { label: "Offres", href: "#offres" },
   { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#contact" },
 ];
 
 // Liens secondaires (colonne de droite)
@@ -90,30 +89,47 @@ export default function Menu() {
         />
       </Link>
 
-      {/* Bouton burger, coin haut droit (se transforme en croix à l'ouverture) */}
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-        aria-expanded={open}
-        className="fixed right-8 top-8 z-50 flex h-12 w-12 flex-col items-center justify-center gap-1.5 sm:right-12 sm:top-12"
-      >
-        <span
-          className={`block h-0.5 w-7 transition-all duration-300 ${
-            open ? "translate-y-2 rotate-45 bg-white" : "bg-zinc-900"
+      {/* Coin haut droit : bouton Contacter + burger (au premier plan) */}
+      <div className="fixed right-8 top-8 z-50 flex items-center gap-3 sm:right-12 sm:top-12">
+        {/* CTA Contacter, encadré, reste visible sur le panneau noir */}
+        <Link
+          href="#contact"
+          onClick={close}
+          className={`animate-fade-in rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-tight transition-colors duration-300 ${
+            open
+              ? "border-white text-white hover:bg-white hover:text-black"
+              : "border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white"
           }`}
-        />
-        <span
-          className={`block h-0.5 w-7 transition-all duration-300 ${
-            open ? "opacity-0" : "bg-zinc-900"
-          }`}
-        />
-        <span
-          className={`block h-0.5 w-7 transition-all duration-300 ${
-            open ? "-translate-y-2 -rotate-45 bg-white" : "bg-zinc-900"
-          }`}
-        />
-      </button>
+          style={{ animationDelay: "0.9s" }}
+        >
+          Contactez nous
+        </Link>
+
+        {/* Burger (se transforme en croix à l'ouverture) */}
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-expanded={open}
+          className="flex h-12 w-12 flex-col items-center justify-center gap-1.5"
+        >
+          <span
+            className={`block h-0.5 w-7 transition-all duration-300 ${
+              open ? "translate-y-2 rotate-45 bg-white" : "bg-zinc-900"
+            }`}
+          />
+          <span
+            className={`block h-0.5 w-7 transition-all duration-300 ${
+              open ? "opacity-0" : "bg-zinc-900"
+            }`}
+          />
+          <span
+            className={`block h-0.5 w-7 transition-all duration-300 ${
+              open ? "-translate-y-2 -rotate-45 bg-white" : "bg-zinc-900"
+            }`}
+          />
+        </button>
+      </div>
 
       {/* Panneau plein écran qui glisse depuis la droite */}
       <aside
