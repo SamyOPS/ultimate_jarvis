@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Variante "portable" : écrans courts (hauteur <= 900px, ex. PC portables).
+   Le rendu de base reste celui du grand écran ; on ne surcharge que sur portable. */
+@custom-variant laptop (@media (max-height: 900px));
+
+/* Police plus douce (DM Sans) pour les pages de contenu. */
+.font-soft {
+  font-family: var(--font-soft), var(--font-geist-sans), sans-serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

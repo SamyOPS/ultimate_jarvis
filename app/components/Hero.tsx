@@ -94,9 +94,10 @@ export default function Hero() {
       className="relative h-dvh w-full overflow-hidden bg-white"
       style={{ perspective: "1200px" }}
     >
-      {/* Réacteur (vidéo puis image) avec parallaxe 3D au curseur */}
+      {/* Réacteur (vidéo puis image) avec parallaxe 3D au curseur.
+          Sur portable (écran court) : léger retrait vertical pour dégager le titre. */}
       <div
-        className="absolute inset-0 transition-transform duration-300 ease-out"
+        className="absolute inset-0 transition-transform duration-300 ease-out laptop:inset-y-[6%]"
         style={{
           transform: `rotateY(${tilt.x * 4}deg) rotateX(${-tilt.y * 4}deg) translateX(${tilt.x * 8}px) translateY(${tilt.y * 8}px)`,
         }}
@@ -179,7 +180,7 @@ export default function Hero() {
       {/* « VI » (6 en chiffres romains), style hachuré, en haut à droite */}
       <span
         aria-hidden
-        className="pointer-events-none absolute right-8 top-[32%] z-20 -translate-y-1/2 select-none font-sans text-8xl font-bold leading-none tracking-tight sm:right-12 sm:text-[12rem]"
+        className="pointer-events-none absolute right-8 top-[32%] z-20 -translate-y-1/2 select-none font-sans text-8xl font-bold leading-none tracking-tight sm:right-12 sm:text-[12rem] laptop:top-[42%]"
       >
         {["V", "I"].map((char, i) => (
           <span key={i} className="reveal-mask">
@@ -198,7 +199,7 @@ export default function Hero() {
       </span>
 
       {/* Citation, à gauche, centrée verticalement, animée lettre par lettre */}
-      <figure className="pointer-events-none absolute left-8 top-[32%] z-20 max-w-xs -translate-y-1/2 sm:left-12 sm:max-w-sm">
+      <figure className="pointer-events-none absolute left-8 top-[32%] z-20 max-w-xs -translate-y-1/2 sm:left-12 sm:max-w-sm laptop:top-[42%]">
         <span
           aria-hidden
           className="animate-fade-in block font-sans text-5xl font-bold leading-none text-zinc-900"
@@ -245,7 +246,7 @@ export default function Hero() {
 
       {/* Titre de marque, en bas de page, gros et impactant, fondu à l'arrivée */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-2 pb-8 sm:pb-12">
-        <h1 className="animate-fade-in whitespace-nowrap font-sans text-center text-[10vw] font-bold uppercase leading-none tracking-tight text-zinc-900">
+        <h1 className="animate-fade-in whitespace-nowrap font-sans text-center text-[10vw] font-bold uppercase leading-none tracking-tight text-zinc-900 laptop:text-[8vw]">
           Jarvis Connect
         </h1>
       </div>

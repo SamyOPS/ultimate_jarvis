@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Fragment, useState } from "react";
+import { usePageTransition } from "./PageTransition";
 
 // Révélation masquée lettre par lettre, pilotée par l'ouverture du panneau.
 // Les mots restent insécables (pas de coupure au milieu d'un mot).
@@ -58,22 +60,39 @@ const mainLinks = [
 
 // Liens secondaires (colonne de droite)
 const infoLinks = [
-  { label: "Mentions légales", href: "#mentions-legales" },
-  { label: "CGU", href: "#cgu" },
-  { label: "Politique de confidentialité", href: "#confidentialite" },
+  { label: "Mentions légales", href: "/mentions-legales" },
+  { label: "CGU", href: "/cgu" },
+  { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
   { label: "S'inscrire à la newsletter", href: "#newsletter" },
 ];
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
+  const pathname = usePathname();
+  const { navigate } = usePageTransition();
+
+  // Clic sur un lien : transition voile noir pour les vraies pages (`/...`),
+  // simple fermeture + défilement pour les ancres (`#...`).
+  const onNav = (e: React.MouseEvent, href: string) => {
+    if (href.startsWith("/")) {
+      e.preventDefault();
+      if (href === pathname) {
+        close();
+      } else {
+        navigate(href);
+      }
+    } else {
+      close();
+    }
+  };
 
   return (
     <>
       {/* Logo au premier plan : passe en blanc quand le panneau s'ouvre */}
       <Link
         href="/"
-        onClick={close}
+        onClick={(e) => onNav(e, "/")}
         aria-label="Jarvis — Accueil"
         className="fixed left-8 top-8 z-50 sm:left-12 sm:top-12"
       >
@@ -146,8 +165,8 @@ export default function Menu() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={close}
-                  className="block text-5xl font-bold uppercase leading-[1.05] tracking-tight text-white transition-colors hover:text-white/60 sm:text-7xl"
+                  onClick={(e) => onNav(e, link.href)}
+                  className="block text-5xl font-bold uppercase leading-[1.05] tracking-tight text-white transition-colors hover:text-white/60 sm:text-7xl laptop:text-5xl"
                 >
                   <RevealChars
                     text={link.label}
@@ -168,7 +187,7 @@ export default function Menu() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    onClick={close}
+                    onClick={(e) => onNav(e, link.href)}
                     className="font-medium uppercase tracking-tight text-white/80 transition-colors hover:text-white"
                   >
                     <RevealChars
@@ -192,7 +211,7 @@ export default function Menu() {
                 </span>
                 <Link
                   href="/login"
-                  onClick={close}
+                  onClick={(e) => onNav(e, "/login")}
                   className="inline-flex items-center gap-1 font-medium uppercase tracking-tight text-white/80 transition-colors hover:text-white"
                 >
                   <RevealChars
