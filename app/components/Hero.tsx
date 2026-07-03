@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import Menu from "./Menu";
 
 // Révélation masquée lettre par lettre au chargement (même effet que la citation).
 function RevealText({
@@ -156,9 +155,6 @@ export default function Hero() {
           }}
         />
       )}
-
-      {/* Menu burger + panneau latéral (contient aussi le logo au premier plan) */}
-      <Menu />
 
       {/* Phrase d'accroche + mots clés, centrés en haut de page */}
       <div className="pointer-events-none absolute left-1/2 top-10 z-20 flex max-w-2xl -translate-x-1/2 flex-col items-center gap-4 px-4 text-center sm:top-12">

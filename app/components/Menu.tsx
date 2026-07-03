@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { usePageTransition } from "./PageTransition";
 
 // Révélation masquée lettre par lettre, pilotée par l'ouverture du panneau.
@@ -68,9 +68,39 @@ const infoLinks = [
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
+  const [onDark, setOnDark] = useState(false);
   const close = () => setOpen(false);
   const pathname = usePathname();
   const { navigate } = usePageTransition();
+
+  // La barre passe en blanc quand un panneau sombre (data-nav-dark) la recouvre.
+  useEffect(() => {
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      const navY = 48; // point situé dans la barre (haut de page)
+      let over = false;
+      document.querySelectorAll("[data-nav-dark]").forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top <= navY && r.bottom >= navY) over = true;
+      });
+      setOnDark(over);
+    };
+    const onScroll = () => {
+      if (!raf) raf = window.requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, [pathname]);
+
+  // Éléments de la barre en blanc si le menu est ouvert OU sur fond sombre.
+  const dark = open || onDark;
 
   // Clic sur un lien : transition voile noir pour les vraies pages (`/...`),
   // simple fermeture + défilement pour les ancres (`#...`).
@@ -103,7 +133,7 @@ export default function Menu() {
           height={48}
           priority
           className={`h-10 w-10 object-contain transition-[filter] duration-300 sm:h-12 sm:w-12 ${
-            open ? "invert" : "invert-0"
+            dark ? "invert" : "invert-0"
           }`}
         />
       </Link>
@@ -115,7 +145,7 @@ export default function Menu() {
           href="#contact"
           onClick={close}
           className={`animate-fade-in rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-tight transition-colors duration-300 ${
-            open
+            dark
               ? "border-white text-white hover:bg-white hover:text-black"
               : "border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white"
           }`}
@@ -134,18 +164,18 @@ export default function Menu() {
         >
           <span
             className={`block h-0.5 w-7 transition-all duration-300 ${
-              open ? "translate-y-2 rotate-45 bg-white" : "bg-zinc-900"
+              dark ? "bg-white" : "bg-zinc-900"
+            } ${open ? "translate-y-2 rotate-45" : ""}`}
+          />
+          <span
+            className={`block h-0.5 w-7 transition-all duration-300 ${
+              open ? "opacity-0" : dark ? "bg-white" : "bg-zinc-900"
             }`}
           />
           <span
             className={`block h-0.5 w-7 transition-all duration-300 ${
-              open ? "opacity-0" : "bg-zinc-900"
-            }`}
-          />
-          <span
-            className={`block h-0.5 w-7 transition-all duration-300 ${
-              open ? "-translate-y-2 -rotate-45 bg-white" : "bg-zinc-900"
-            }`}
+              dark ? "bg-white" : "bg-zinc-900"
+            } ${open ? "-translate-y-2 -rotate-45" : ""}`}
           />
         </button>
       </div>
