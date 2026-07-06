@@ -4,6 +4,13 @@
    Le rendu de base reste celui du grand écran ; on ne surcharge que sur portable. */
 @custom-variant laptop (@media (max-height: 900px));
 
+/* Réserve en permanence la gouttière de la barre de défilement : quand on
+   verrouille le scroll (menu ouvert), la barre disparaît sans décaler la page
+   ni faire « sauter » les éléments fixes de la navbar. */
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Police plus douce (DM Sans) pour les pages de contenu. */
 .font-soft {
   font-family: var(--font-soft), var(--font-geist-sans), sans-serif;
@@ -112,6 +119,16 @@ body {
   overflow: hidden;
   vertical-align: bottom;
   padding-bottom: 0.12em;
+}
+
+/* Variante pour le texte courant (bas de casse) : plus de marge basse afin de
+   ne pas rogner les jambages (g, p, y, q…). À utiliser avec translate-y-[135%]
+   pour que la lettre reste totalement cachée avant sa montée. */
+.reveal-mask-text {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.28em;
 }
 
 .reveal-inner {

@@ -88,6 +88,15 @@ export default function Menu() {
       return next;
     });
 
+  // Verrouille le défilement de la page tant que le panneau est ouvert.
+  useEffect(() => {
+    const html = document.documentElement;
+    html.style.overflow = open ? "hidden" : "";
+    return () => {
+      html.style.overflow = "";
+    };
+  }, [open]);
+
   // Fin de l'animation de glissement : quand le panneau a fini de se refermer,
   // la barre peut de nouveau suivre la couleur de la section. (On ne réagit qu'à
   // la transition du panneau lui-même, pas à celle des lettres qu'il contient.)
