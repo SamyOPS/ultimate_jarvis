@@ -30,10 +30,13 @@ export default function PageTransition({
   const pendingRef = useRef<string | null>(null);
 
   // Déclenche la transition : voile noir → navigation → révélation.
+  // `href` peut contenir une ancre (ex. "/#expertises") : on ne compare que la
+  // partie chemin, et c'est elle qu'on attend pour dissiper le voile.
   const navigate = useCallback(
     (href: string) => {
-      if (href === pathname) return;
-      pendingRef.current = href;
+      const targetPath = href.split("#")[0] || pathname;
+      if (targetPath === pathname && !href.includes("#")) return;
+      pendingRef.current = targetPath;
       setCovering(true);
       // On laisse le voile finir de couvrir avant de changer de page.
       window.setTimeout(() => router.push(href), DURATION);

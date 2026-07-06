@@ -11,7 +11,7 @@ const paragraphs = [
 ];
 
 const CLOSING = "Bienvenue chez Jarvis Connect.";
-const STEP = 6; // ms entre chaque lettre (cascade continue)
+const STEP = 0; // ms entre chaque lettre (0 = tout le texte se révèle en même temps)
 
 // Compte les caractères hors espaces (base de délai de la lettre suivante).
 const visibleLen = (t: string) => t.replace(/\s/g, "").length;
@@ -98,9 +98,9 @@ export default function Mission() {
     <section
       ref={ref}
       data-nav-dark
-      className="relative z-10 flex min-h-dvh items-center bg-black px-6 py-28 text-white sm:px-12"
+      className="flex min-h-dvh flex-col justify-center bg-black pb-24 pt-48 text-white"
     >
-      <div className="font-quote mx-auto max-w-3xl">
+      <div className="font-quote mx-auto w-full max-w-3xl px-6 sm:px-12">
         {blocks.map(({ text, start }, i) => (
           <p
             key={i}

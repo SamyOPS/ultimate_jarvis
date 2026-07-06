@@ -1,23 +1,32 @@
 import Hero from "./components/Hero";
 import Menu from "./components/Menu";
 import Mission from "./components/Mission";
+import Expertise from "./components/Expertise";
+import Offres from "./components/Offres";
+import HashScroll from "./components/HashScroll";
 
 export default function Home() {
   return (
     <main>
-      {/* Menu au premier plan, hors du hero (sinon le perspective 3D du hero
-          l'enfermerait sous le panneau noir) */}
+      {/* Repositionne sur la bonne section si on arrive avec une ancre (#...) */}
+      <HashScroll />
+
+      {/* Menu au premier plan, hors du hero (le perspective 3D du hero
+          piégerait sinon les éléments fixes de la barre) */}
       <Menu />
 
-      {/* Hero épinglé : il reste fixe pendant que le panneau noir monte par-dessus */}
-      <div className="sticky top-0 z-0 h-dvh overflow-hidden">
-        <Hero />
-      </div>
+      {/* Scroll classique : les sections s'enchaînent normalement */}
+      <Hero />
 
-      {/* Panneau noir qui monte et recouvre le hero au défilement.
-          data-nav-dark : signale à la barre qu'elle doit passer en blanc.
-          Le texte se révèle en fondu quand la section entre à l'écran. */}
+      {/* Section mission (panneau noir). data-nav-dark : la barre passe en blanc.
+          Le texte se révèle quand la section entre à l'écran. */}
       <Mission />
+
+      {/* Section expertises (fond blanc) */}
+      <Expertise />
+
+      {/* Section offres d'emploi (fond bleu clair) */}
+      <Offres />
     </main>
   );
 }

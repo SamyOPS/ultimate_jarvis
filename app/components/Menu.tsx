@@ -155,19 +155,49 @@ export default function Menu() {
           "border-white/30 text-white/80 hover:border-white hover:text-white",
       };
 
-  // Clic sur un lien : transition voile noir pour les vraies pages (`/...`),
-  // simple fermeture + défilement pour les ancres (`#...`).
+  // Clic sur un lien :
+  // - vraie page (`/...`) : transition voile noir.
+  // - ancre (`#...`) : on ferme le menu puis on défile en douceur vers la
+  //   section (après la fermeture du panneau, une fois le scroll déverrouillé).
   const onNav = (e: React.MouseEvent, href: string) => {
     if (href.startsWith("/")) {
       e.preventDefault();
       if (href === pathname) {
+        // Déjà sur la page : on ferme puis on remonte en haut en douceur.
         close();
+        window.setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 500);
       } else {
         navigate(href);
       }
-    } else {
-      close();
+      return;
     }
+
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      close();
+      if (pathname === "/") {
+        // On laisse le panneau finir de se refermer avant de défiler.
+        window.setTimeout(() => {
+          document
+            .querySelector(href)
+            ?.scrollIntoView({ behavior: "smooth" });
+        }, 500);
+      } else {
+        // Depuis une autre page : on mémorise la cible, on revient à l'accueil,
+        // et HashScroll prend en charge le défilement à l'arrivée.
+        try {
+          sessionStorage.setItem("jc:scrollTarget", href);
+        } catch {
+          /* sessionStorage indisponible : on ignore */
+        }
+        navigate("/");
+      }
+      return;
+    }
+
+    close();
   };
 
   return (
