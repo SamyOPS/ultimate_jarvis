@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import PageTransition from "./components/PageTransition";
 
@@ -19,6 +19,14 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
 });
 
+// Serif éditoriale, pour les citations / la section mission.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
   title: "Jarvis Connect — Support informatique & infogérance",
   description:
@@ -33,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${dmSans.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${dmSans.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <PageTransition>{children}</PageTransition>

@@ -9,6 +9,11 @@
   font-family: var(--font-soft), var(--font-geist-sans), sans-serif;
 }
 
+/* Serif éditoriale (Instrument Serif) pour les citations / la mission. */
+.font-quote {
+  font-family: var(--font-instrument), Georgia, "Times New Roman", serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

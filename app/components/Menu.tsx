@@ -69,9 +69,31 @@ const infoLinks = [
 export default function Menu() {
   const [open, setOpen] = useState(false);
   const [onDark, setOnDark] = useState(false);
+  // Thème figé à l'ouverture (clair si on ouvre au-dessus d'une section sombre)
+  const [panelLight, setPanelLight] = useState(false);
+  // Vrai tant que le panneau occupe l'écran (ouvert OU en cours de fermeture)
+  const [covering, setCovering] = useState(false);
   const close = () => setOpen(false);
   const pathname = usePathname();
   const { navigate } = usePageTransition();
+
+  // Ouvre/ferme le panneau. À l'ouverture, on fige son thème selon le fond.
+  const toggle = () =>
+    setOpen((v) => {
+      const next = !v;
+      if (next) {
+        setPanelLight(onDark);
+        setCovering(true);
+      }
+      return next;
+    });
+
+  // Fin de l'animation de glissement : quand le panneau a fini de se refermer,
+  // la barre peut de nouveau suivre la couleur de la section. (On ne réagit qu'à
+  // la transition du panneau lui-même, pas à celle des lettres qu'il contient.)
+  const onPanelTransitionEnd = (e: React.TransitionEvent) => {
+    if (e.target === e.currentTarget && !open) setCovering(false);
+  };
 
   // La barre passe en blanc quand un panneau sombre (data-nav-dark) la recouvre.
   useEffect(() => {
@@ -99,8 +121,30 @@ export default function Menu() {
     };
   }, [pathname]);
 
-  // Éléments de la barre en blanc si le menu est ouvert OU sur fond sombre.
-  const dark = open || onDark;
+  // Couleur des éléments de la barre : ils doivent contraster avec ce qu'il y a
+  // derrière. Tant que le panneau recouvre l'écran (ouverture/fermeture), c'est
+  // lui la référence (inverse de son thème) ; sinon, c'est la section sous la
+  // barre. Ainsi la barre reste cohérente pendant toute la fermeture.
+  const dark = covering ? !panelLight : onDark;
+
+  // Jeux de classes du panneau selon son thème (clair ou sombre).
+  const panel = panelLight
+    ? {
+        bg: "bg-[#f4f1ec] text-[#1c1a17]",
+        link: "text-[#1c1a17] hover:text-[#1c1a17]/60",
+        label: "text-[#1c1a17]/50",
+        info: "text-[#1c1a17]/70 hover:text-[#1c1a17]",
+        social:
+          "border-[#1c1a17]/25 text-[#1c1a17]/70 hover:border-[#1c1a17] hover:text-[#1c1a17]",
+      }
+    : {
+        bg: "bg-[#1c1a17] text-white",
+        link: "text-white hover:text-white/60",
+        label: "text-white/50",
+        info: "text-white/80 hover:text-white",
+        social:
+          "border-white/30 text-white/80 hover:border-white hover:text-white",
+      };
 
   // Clic sur un lien : transition voile noir pour les vraies pages (`/...`),
   // simple fermeture + défilement pour les ancres (`#...`).
@@ -157,7 +201,7 @@ export default function Menu() {
         {/* Burger (se transforme en croix à l'ouverture) */}
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={toggle}
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={open}
           className="flex h-12 w-12 flex-col items-center justify-center gap-1.5"
@@ -183,7 +227,8 @@ export default function Menu() {
       {/* Panneau plein écran qui glisse depuis la droite */}
       <aside
         aria-hidden={!open}
-        className={`fixed inset-0 z-40 h-dvh w-full bg-[#1c1a17] text-white transition-transform duration-500 ease-out ${
+        onTransitionEnd={onPanelTransitionEnd}
+        className={`fixed inset-0 z-40 h-dvh w-full transition-transform duration-500 ease-out ${panel.bg} ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -196,7 +241,7 @@ export default function Menu() {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => onNav(e, link.href)}
-                  className="block text-5xl font-bold uppercase leading-[1.05] tracking-tight text-white transition-colors hover:text-white/60 sm:text-7xl laptop:text-5xl"
+                  className={`block text-5xl font-bold uppercase leading-[1.05] tracking-tight transition-colors sm:text-7xl laptop:text-5xl ${panel.link}`}
                 >
                   <RevealChars
                     text={link.label}
@@ -210,7 +255,7 @@ export default function Menu() {
 
             <div className="hidden shrink-0 flex-col gap-8 text-sm sm:flex">
               <div className="flex flex-col gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                <span className={`text-xs font-semibold uppercase tracking-[0.2em] ${panel.label}`}>
                   <RevealChars text="Contact" open={open} base={700} step={22} />
                 </span>
                 {infoLinks.map((link, k) => (
@@ -218,7 +263,7 @@ export default function Menu() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => onNav(e, link.href)}
-                    className="font-medium uppercase tracking-tight text-white/80 transition-colors hover:text-white"
+                    className={`font-medium uppercase tracking-tight transition-colors ${panel.info}`}
                   >
                     <RevealChars
                       text={link.label}
@@ -231,7 +276,7 @@ export default function Menu() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                <span className={`text-xs font-semibold uppercase tracking-[0.2em] ${panel.label}`}>
                   <RevealChars
                     text="Membre de Jarvis"
                     open={open}
@@ -242,7 +287,7 @@ export default function Menu() {
                 <Link
                   href="/login"
                   onClick={(e) => onNav(e, "/login")}
-                  className="inline-flex items-center gap-1 font-medium uppercase tracking-tight text-white/80 transition-colors hover:text-white"
+                  className={`inline-flex items-center gap-1 font-medium uppercase tracking-tight transition-colors ${panel.info}`}
                 >
                   <RevealChars
                     text="Accéder à mon espace"
@@ -284,7 +329,7 @@ export default function Menu() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white/80 transition-colors hover:border-white hover:text-white"
+              className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4 0 4.75 2.65 4.75 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.05 1.4-2.05 2.85V21H10V9Z" />
@@ -295,7 +340,7 @@ export default function Menu() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white/80 transition-colors hover:border-white hover:text-white"
+              className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
             >
               <svg
                 className="h-5 w-5"
