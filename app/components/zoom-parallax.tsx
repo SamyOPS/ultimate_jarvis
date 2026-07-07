@@ -1,6 +1,11 @@
 "use client";
 
-import { useScroll, useTransform, motion } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { useRef } from "react";
 
 interface Image {
@@ -11,9 +16,34 @@ interface Image {
 interface ZoomParallaxProps {
   /** Tableau d'images affichées dans l'effet parallaxe (7 max) */
   images: Image[];
+  /** Titre révélé lettre par lettre au fil du scroll (optionnel) */
+  title?: string;
 }
 
-export function ZoomParallax({ images }: ZoomParallaxProps) {
+// Une lettre qui monte depuis sa ligne (comme les textes du menu), mais pilotée
+// par la progression du scroll plutôt que par le temps.
+function RevealLetter({
+  char,
+  progress,
+  start,
+  end,
+}: {
+  char: string;
+  progress: MotionValue<number>;
+  start: number;
+  end: number;
+}) {
+  const y = useTransform(progress, [start, end], ["120%", "0%"]);
+  return (
+    <span aria-hidden className="reveal-mask">
+      <motion.span className="inline-block" style={{ y }}>
+        {char}
+      </motion.span>
+    </span>
+  );
+}
+
+export function ZoomParallax({ images, title }: ZoomParallaxProps) {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
     target: container,
@@ -27,6 +57,8 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
   const scale9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
 
   const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
+
+  const letters = title ? [...title] : [];
 
   return (
     <div ref={container} className="relative h-[300vh]">
@@ -51,6 +83,30 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
             </motion.div>
           );
         })}
+
+        {/* Titre révélé progressivement pendant le zoom (transition vers la
+            section expertises) */}
+        {title && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
+            <h2 className="text-center font-sans text-[clamp(2.5rem,12vw,11rem)] font-bold uppercase leading-none tracking-tight text-white">
+              <span aria-label={title}>
+                {letters.map((char, i) => {
+                  const start = 0.55 + (i / letters.length) * 0.3;
+                  const end = start + 0.15;
+                  return (
+                    <RevealLetter
+                      key={i}
+                      char={char}
+                      progress={scrollYProgress}
+                      start={start}
+                      end={end}
+                    />
+                  );
+                })}
+              </span>
+            </h2>
+          </div>
+        )}
       </div>
     </div>
   );

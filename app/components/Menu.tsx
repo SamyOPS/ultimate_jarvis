@@ -164,7 +164,7 @@ export default function Menu() {
     const anchor = hash ? `#${hash}` : "";
 
     if (path === pathname) {
-      // Même page : fermeture puis défilement (vers l'ancre ou en haut).
+      // Déjà sur la page : on referme le panneau (animation) puis on défile.
       close();
       window.setTimeout(() => {
         if (anchor) {
@@ -176,9 +176,9 @@ export default function Menu() {
       return;
     }
 
-    // Autre page : on mémorise l'ancre puis on navigue (voile noir). Le
-    // défilement à l'arrivée est pris en charge par ScrollToTarget.
-    close();
+    // Autre page : seulement le fondu (voile). On NE referme PAS le panneau :
+    // le voile le recouvre et le fait fondre au noir, sans animation de repli.
+    // Le défilement à l'arrivée est pris en charge par ScrollToTarget.
     if (anchor) {
       try {
         sessionStorage.setItem("jc:scrollTarget", anchor);

@@ -2,6 +2,7 @@ import Menu from "../components/Menu";
 import Mission from "../components/Mission";
 import ScrollToTarget from "../components/ScrollToTarget";
 import { ZoomParallax } from "../components/zoom-parallax";
+import ExpertiseGallery from "../components/ExpertiseGallery";
 
 // Images du parallaxe — PLACEHOLDERS (à remplacer par tes visuels de marque).
 const showcaseImages = [
@@ -46,10 +47,23 @@ export default function DecouvrirPage() {
       {/* Discours */}
       <Mission />
 
-      {/* Parallaxe zoom au défilement (fond noir → barre en blanc) */}
-      <section data-nav-dark className="bg-black">
-        <ZoomParallax images={showcaseImages} />
+      {/* Parallaxe zoom : sert de transition vers la section expertises.
+          Le titre « Expertises » se dévoile au fil du scroll pendant le zoom.
+          Fond noir → barre en blanc. */}
+      <section data-nav-dark className="relative bg-black">
+        <ZoomParallax images={showcaseImages} title="Expertises" />
+
+        {/* Cible du lien « Expertises » : positionnée à la fin du zoom (progress
+            ~1, à 200vh sur les 300vh), quand le titre est entièrement affiché. */}
+        <span
+          id="expertises"
+          aria-hidden
+          className="pointer-events-none absolute left-0 top-[200vh]"
+        />
       </section>
+
+      {/* Détail des expertises : galerie horizontale (fond blanc) */}
+      <ExpertiseGallery />
     </main>
   );
 }
