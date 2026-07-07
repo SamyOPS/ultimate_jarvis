@@ -22,7 +22,10 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/politique-de-confidentialite)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/cgu)",
       "Bash(echo \"EXIT: $?\")",
-      "PowerShell(Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\(\"c:\\\\Users\\\\azeez\\\\Desktop\\\\ultimate_jarvis\\\\public\\\\Image\\\\signature.png\"\\); \"$\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\))"
+      "PowerShell(Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\(\"c:\\\\Users\\\\azeez\\\\Desktop\\\\ultimate_jarvis\\\\public\\\\Image\\\\signature.png\"\\); \"$\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\))",
+      "PowerShell(npm install framer-motion 2>&1)",
+      "Bash(node -p \"require\\('framer-motion/package.json'\\).version\")",
+      "PowerShell(npm run build 2>&1)"
     ]
   }
 }
