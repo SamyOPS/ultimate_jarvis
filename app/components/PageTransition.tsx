@@ -10,9 +10,16 @@ import {
   useState,
 } from "react";
 
-type TransitionCtx = { navigate: (href: string) => void };
+type TransitionCtx = {
+  navigate: (href: string) => void;
+  // Voile noir sans changer de page : couvre, exécute `action`, puis révèle.
+  cover: (action?: () => void) => void;
+};
 
-const TransitionContext = createContext<TransitionCtx>({ navigate: () => {} });
+const TransitionContext = createContext<TransitionCtx>({
+  navigate: () => {},
+  cover: () => {},
+});
 
 export const usePageTransition = () => useContext(TransitionContext);
 
@@ -44,6 +51,16 @@ export default function PageTransition({
     [pathname, router]
   );
 
+  // Voile noir sur place (sans navigation) : on couvre, on exécute l'action
+  // (ex. défiler vers une section) pendant que c'est noir, puis on révèle.
+  const cover = useCallback((action?: () => void) => {
+    setCovering(true);
+    window.setTimeout(() => {
+      action?.();
+      window.setTimeout(() => setCovering(false), 100);
+    }, DURATION);
+  }, []);
+
   // Nouvelle page chargée (le pathname a changé) → on dissipe le voile.
   useEffect(() => {
     if (pendingRef.current && pendingRef.current === pathname) {
@@ -55,7 +72,7 @@ export default function PageTransition({
   }, [pathname]);
 
   return (
-    <TransitionContext.Provider value={{ navigate }}>
+    <TransitionContext.Provider value={{ navigate, cover }}>
       {children}
       <div
         aria-hidden

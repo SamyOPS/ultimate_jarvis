@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { usePageTransition } from "./PageTransition";
 
 // Révélation masquée lettre par lettre au chargement (même effet que la citation).
 function RevealText({
@@ -50,6 +51,8 @@ export default function Hero() {
   const [ignited, setIgnited] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
+  const { navigate } = usePageTransition();
+
   // Bascule sur l'image du réacteur allumé pour simuler un allumage constant.
   const ignite = () => setIgnited(true);
 
@@ -77,6 +80,12 @@ export default function Hero() {
   };
 
   const resetTilt = () => setTilt({ x: 0, y: 0 });
+
+  // Bouton « Nous découvrir » : transition (fondu au noir) vers la page
+  // découverte (discours, expertises, offres).
+  const discover = () => {
+    navigate("/decouvrir");
+  };
 
   // Citation : animée lettre par lettre (cascade verticale) après le titre.
   const quote = "Records are made to be broken!";
@@ -240,11 +249,35 @@ export default function Hero() {
         </figcaption>
       </figure>
 
-      {/* Titre de marque, en bas de page, gros et impactant, fondu à l'arrivée */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-2 pb-8 sm:pb-12">
+      {/* Titre de marque + bouton, en bas de page, fondu à l'arrivée */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-5 px-2 pb-8 sm:pb-12">
         <h1 className="animate-fade-in whitespace-nowrap font-sans text-center text-[10vw] font-bold uppercase leading-none tracking-tight text-zinc-900 laptop:text-[8vw]">
           Jarvis Connect
         </h1>
+
+        {/* Bouton de découverte : même style que « Contactez nous », en plus
+            grand. Transition (fondu au noir) vers /decouvrir. */}
+        <button
+          type="button"
+          onClick={discover}
+          className="animate-fade-in pointer-events-auto inline-flex items-center gap-2 rounded-full border border-zinc-900 px-8 py-4 text-sm font-semibold uppercase tracking-tight text-zinc-900 transition-colors duration-300 hover:bg-zinc-900 hover:text-white"
+          style={{ animationDelay: "2.4s" }}
+        >
+          Nous découvrir
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <polyline points="19 12 12 19 5 12" />
+          </svg>
+        </button>
       </div>
 
     </section>

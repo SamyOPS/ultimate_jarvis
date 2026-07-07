@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { usePageTransition } from "./PageTransition";
+import { lockScroll, unlockScroll } from "../lib/scrollLock";
 
 // Révélation masquée lettre par lettre, pilotée par l'ouverture du panneau.
 // Les mots restent insécables (pas de coupure au milieu d'un mot).
@@ -53,9 +54,9 @@ function RevealChars({
 // Liens principaux (gros, à gauche)
 const mainLinks = [
   { label: "Accueil", href: "/" },
-  { label: "Expertises", href: "#expertises" },
-  { label: "Offres", href: "#offres" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Expertises", href: "/decouvrir#expertises" },
+  { label: "Offres", href: "/decouvrir#offres" },
+  { label: "FAQ", href: "/decouvrir#faq" },
 ];
 
 // Liens secondaires (colonne de droite)
@@ -88,13 +89,12 @@ export default function Menu() {
       return next;
     });
 
-  // Verrouille le défilement de la page tant que le panneau est ouvert.
+  // Verrouille le défilement de la page tant que le panneau est ouvert
+  // (via le verrou à compteur, partagé avec la porte du hero).
   useEffect(() => {
-    const html = document.documentElement;
-    html.style.overflow = open ? "hidden" : "";
-    return () => {
-      html.style.overflow = "";
-    };
+    if (!open) return;
+    lockScroll();
+    return () => unlockScroll();
   }, [open]);
 
   // Fin de l'animation de glissement : quand le panneau a fini de se refermer,
@@ -155,49 +155,38 @@ export default function Menu() {
           "border-white/30 text-white/80 hover:border-white hover:text-white",
       };
 
-  // Clic sur un lien :
-  // - vraie page (`/...`) : transition voile noir.
-  // - ancre (`#...`) : on ferme le menu puis on défile en douceur vers la
-  //   section (après la fermeture du panneau, une fois le scroll déverrouillé).
+  // Clic sur un lien. Le href peut être un chemin, une ancre, ou les deux
+  // (ex. "/decouvrir#expertises").
   const onNav = (e: React.MouseEvent, href: string) => {
-    if (href.startsWith("/")) {
-      e.preventDefault();
-      if (href === pathname) {
-        // Déjà sur la page : on ferme puis on remonte en haut en douceur.
-        close();
-        window.setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }, 500);
-      } else {
-        navigate(href);
-      }
-      return;
-    }
+    e.preventDefault();
+    const [rawPath, hash] = href.split("#");
+    const path = rawPath || pathname; // "#foo" seul → page courante
+    const anchor = hash ? `#${hash}` : "";
 
-    if (href.startsWith("#")) {
-      e.preventDefault();
+    if (path === pathname) {
+      // Même page : fermeture puis défilement (vers l'ancre ou en haut).
       close();
-      if (pathname === "/") {
-        // On laisse le panneau finir de se refermer avant de défiler.
-        window.setTimeout(() => {
-          document
-            .querySelector(href)
-            ?.scrollIntoView({ behavior: "smooth" });
-        }, 500);
-      } else {
-        // Depuis une autre page : on mémorise la cible, on revient à l'accueil,
-        // et HashScroll prend en charge le défilement à l'arrivée.
-        try {
-          sessionStorage.setItem("jc:scrollTarget", href);
-        } catch {
-          /* sessionStorage indisponible : on ignore */
+      window.setTimeout(() => {
+        if (anchor) {
+          document.querySelector(anchor)?.scrollIntoView({ behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
-        navigate("/");
-      }
+      }, 500);
       return;
     }
 
+    // Autre page : on mémorise l'ancre puis on navigue (voile noir). Le
+    // défilement à l'arrivée est pris en charge par ScrollToTarget.
     close();
+    if (anchor) {
+      try {
+        sessionStorage.setItem("jc:scrollTarget", anchor);
+      } catch {
+        /* sessionStorage indisponible : on ignore */
+      }
+    }
+    navigate(path);
   };
 
   return (

@@ -11,7 +11,10 @@ const paragraphs = [
 ];
 
 const CLOSING = "Bienvenue chez Jarvis Connect.";
-const STEP = 0; // ms entre chaque lettre (0 = tout le texte se révèle en même temps)
+const STEP = 4; // ms entre chaque lettre (cascade, comme les textes du menu)
+// Délai de départ : on laisse le voile de transition se dissiper avant que la
+// cascade démarre, pour qu'elle soit bien visible à l'arrivée sur la page.
+const BASE = 650;
 
 // Compte les caractères hors espaces (base de délai de la lettre suivante).
 const visibleLen = (t: string) => t.replace(/\s/g, "").length;
@@ -26,7 +29,7 @@ const blocks = paragraphs.map((text) => {
 });
 const closingStart = acc;
 acc += visibleLen(CLOSING);
-const signatureDelay = acc * STEP + 150;
+const signatureDelay = BASE + acc * STEP + 150;
 
 // Révélation lettre par lettre : chaque lettre monte depuis sa ligne (masque),
 // en cascade. Même effet que les catégories du menu, piloté par `shown`.
@@ -51,11 +54,11 @@ function RevealText({
           <span className="inline-block whitespace-nowrap">
             {[...word].map((char, ci) => {
               idx += 1;
-              const delay = (start + idx) * STEP;
+              const delay = BASE + (start + idx) * STEP;
               return (
                 <span key={ci} aria-hidden className="reveal-mask-text">
                   <span
-                    className={`inline-block transition-transform duration-700 ease-out ${
+                    className={`inline-block transition-transform duration-500 ease-out ${
                       shown ? "translate-y-0" : "translate-y-[135%]"
                     }`}
                     style={{ transitionDelay: shown ? `${delay}ms` : "0ms" }}
