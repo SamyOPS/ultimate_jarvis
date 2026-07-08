@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { useRef } from "react";
 
 // Logos clients (public/Image/logo_client).
@@ -30,6 +35,7 @@ const logos: { src: string; alt: string; invert: boolean; big?: boolean }[] = [
   { src: "/Image/logo_client/tpicap.png", alt: "TP ICAP", invert: true },
   { src: "/Image/logo_client/uniqlo.png", alt: "Uniqlo", invert: false },
   { src: "/Image/logo_client/apprentis-auteuil.png", alt: "Apprentis d'Auteuil", invert: true, big: true },
+  { src: "/Image/logo_client/jacquemus.png", alt: "Jacquemus", invert: true, big: true },
 ];
 
 const row1 = logos.slice(0, 7);
@@ -61,6 +67,45 @@ function Logo({
   );
 }
 
+// Une ligne : couche pilotée par le scroll (translation auto) + couche
+// draggable par-dessus (glisser à la main). Les deux transforms se cumulent.
+function Row({
+  x,
+  items,
+  last,
+}: {
+  x: MotionValue<string>;
+  items: typeof logos;
+  last?: boolean;
+}) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={wrapRef}
+      className={`overflow-hidden border-zinc-900 ${last ? "border-y" : "border-t"}`}
+    >
+      <motion.div style={{ x }}>
+        <motion.div
+          drag="x"
+          dragConstraints={wrapRef}
+          dragElastic={0.08}
+          className="flex w-max cursor-grab py-5 active:cursor-grabbing sm:py-10 lg:py-14 2xl:py-24"
+        >
+          {[...items, ...items].map((logo, i) => (
+            <Logo
+              key={i}
+              src={logo.src}
+              alt={logo.alt}
+              invert={logo.invert}
+              big={logo.big}
+            />
+          ))}
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function Clients() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -83,50 +128,10 @@ export default function Clients() {
       </div>
 
       <div className="mt-6 sm:mt-10 lg:mt-12">
-        {/* Ligne 1 : défile vers la gauche */}
-        <div className="overflow-hidden border-t border-zinc-900">
-          <motion.div style={{ x: x1 }} className="flex w-max py-5 sm:py-10 lg:py-14 2xl:py-24">
-            {[...row1, ...row1].map((logo, i) => (
-              <Logo
-                key={i}
-                src={logo.src}
-                alt={logo.alt}
-                invert={logo.invert}
-                big={logo.big}
-              />
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Ligne 2 : défile vers la droite */}
-        <div className="overflow-hidden border-t border-zinc-900">
-          <motion.div style={{ x: x2 }} className="flex w-max py-5 sm:py-10 lg:py-14 2xl:py-24">
-            {[...row2, ...row2].map((logo, i) => (
-              <Logo
-                key={i}
-                src={logo.src}
-                alt={logo.alt}
-                invert={logo.invert}
-                big={logo.big}
-              />
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Ligne 3 : défile vers la gauche */}
-        <div className="overflow-hidden border-y border-zinc-900">
-          <motion.div style={{ x: x3 }} className="flex w-max py-5 sm:py-10 lg:py-14 2xl:py-24">
-            {[...row3, ...row3].map((logo, i) => (
-              <Logo
-                key={i}
-                src={logo.src}
-                alt={logo.alt}
-                invert={logo.invert}
-                big={logo.big}
-              />
-            ))}
-          </motion.div>
-        </div>
+        {/* Défilement auto (scroll) + glisser à la main */}
+        <Row x={x1} items={row1} />
+        <Row x={x2} items={row2} />
+        <Row x={x3} items={row3} last />
       </div>
     </section>
   );
