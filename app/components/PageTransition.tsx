@@ -1,5 +1,6 @@
 "use client";
 
+import { animate, useMotionValue } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
@@ -10,8 +11,11 @@ import {
   useState,
 } from "react";
 
+type Direction = "down" | "up";
+
 type TransitionCtx = {
-  navigate: (href: string) => void;
+  // `direction` fait glisser le contenu dans le sens du scroll pendant le fondu.
+  navigate: (href: string, direction?: Direction) => void;
   // Voile noir sans changer de page : couvre, exécute `action`, puis révèle.
   cover: (action?: () => void) => void;
 };
@@ -36,23 +40,40 @@ export default function PageTransition({
   const [covering, setCovering] = useState(false);
   const pendingRef = useRef<string | null>(null);
 
-  // Déclenche la transition : voile noir → navigation → révélation.
-  // `href` peut contenir une ancre (ex. "/#expertises") : on ne compare que la
-  // partie chemin, et c'est elle qu'on attend pour dissiper le voile.
+  // Glissement du contenu SORTANT pendant le fondu (simulation de scroll). Le
+  // transform n'est appliqué que lorsque la valeur ≠ 0 (sinon on casserait les
+  // éléments `fixed`/`sticky` au repos). Le conteneur a un fond noir : l'espace
+  // découvert par le glissement est noir et se fond dans le voile (pas de blanc).
+  // À l'arrivée on remet 0 (pas de translation d'entrée → navbar visible tout de
+  // suite, pas de zone blanche).
+  const contentEl = useRef<HTMLDivElement>(null);
+  const contentY = useMotionValue(0);
+  useEffect(() => {
+    return contentY.on("change", (v) => {
+      const el = contentEl.current;
+      if (el) el.style.transform = v === 0 ? "" : `translateY(${v}px)`;
+    });
+  }, [contentY]);
+
   const navigate = useCallback(
-    (href: string) => {
+    (href: string, direction?: Direction) => {
       const targetPath = href.split("#")[0] || pathname;
       if (targetPath === pathname && !href.includes("#")) return;
       pendingRef.current = targetPath;
       setCovering(true);
-      // On laisse le voile finir de couvrir avant de changer de page.
+      if (direction) {
+        const offset = window.innerHeight * 0.14;
+        contentY.set(0);
+        animate(contentY, direction === "down" ? -offset : offset, {
+          duration: DURATION / 1000,
+          ease: [0.4, 0, 1, 1],
+        });
+      }
       window.setTimeout(() => router.push(href), DURATION);
     },
-    [pathname, router]
+    [pathname, router, contentY]
   );
 
-  // Voile noir sur place (sans navigation) : on couvre, on exécute l'action
-  // (ex. défiler vers une section) pendant que c'est noir, puis on révèle.
   const cover = useCallback((action?: () => void) => {
     setCovering(true);
     window.setTimeout(() => {
@@ -61,19 +82,25 @@ export default function PageTransition({
     }, DURATION);
   }, []);
 
-  // Nouvelle page chargée (le pathname a changé) → on dissipe le voile.
+  // Nouvelle page chargée → contenu posé à sa place (transform 0), puis on
+  // dissipe le voile.
   useEffect(() => {
     if (pendingRef.current && pendingRef.current === pathname) {
       pendingRef.current = null;
-      // Petit délai pour laisser la nouvelle page peindre avant de révéler.
+      contentY.set(0);
       const t = window.setTimeout(() => setCovering(false), 100);
       return () => window.clearTimeout(t);
     }
-  }, [pathname]);
+  }, [pathname, contentY]);
 
   return (
     <TransitionContext.Provider value={{ navigate, cover }}>
-      {children}
+      <div
+        ref={contentEl}
+        className="flex min-h-full flex-1 flex-col overflow-x-clip bg-black"
+      >
+        {children}
+      </div>
       <div
         aria-hidden
         className={`fixed inset-0 z-[100] bg-black transition-opacity duration-500 ease-in-out ${

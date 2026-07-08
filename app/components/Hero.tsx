@@ -80,7 +80,7 @@ export default function Hero() {
       if (document.documentElement.style.overflow === "hidden") return;
       if (triggered) return;
       triggered = true;
-      navigate("/decouvrir");
+      navigate("/decouvrir", "down");
     };
     const onWheel = (e: WheelEvent) => {
       if (e.deltaY > 15) go();
@@ -115,7 +115,7 @@ export default function Hero() {
   // Bouton « Nous découvrir » : transition (fondu au noir) vers la page
   // découverte (discours, expertises, offres).
   const discover = () => {
-    navigate("/decouvrir");
+    navigate("/decouvrir", "down");
   };
 
   // Citation : animée lettre par lettre (cascade verticale) après le titre.

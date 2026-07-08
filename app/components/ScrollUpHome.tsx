@@ -22,7 +22,7 @@ export default function ScrollUpHome() {
       if (document.documentElement.style.overflow === "hidden") return; // menu ouvert
       if (window.scrollY > 2) return; // uniquement en haut de page
       triggered = true;
-      navigate("/");
+      navigate("/", "up");
     };
 
     const onWheel = (e: WheelEvent) => {
