@@ -5,9 +5,8 @@ import { Fragment, useEffect, useRef, useState } from "react";
 
 // Paragraphes de la section mission (le premier sert d'accroche).
 const paragraphs = [
-  "Chez Jarvis Connect, nous croyons que la technologie n’a de valeur que lorsqu’elle rapproche les idées, les talents et les ambitions.",
-  "Notre mission est d’accompagner les entreprises dans leur transformation numérique avec des solutions fiables, agiles et humaines. En tant qu’ESN, nous mettons l’expertise de nos équipes au service de vos projets, de vos enjeux métiers et de votre croissance.",
-  "Nous avançons avec une conviction forte : chaque collaboration doit créer un impact durable, mesurable et utile.",
+  "Chez Jarvis Connect, la technologie n’a de valeur que lorsqu’elle rapproche les idées, les talents et les ambitions.",
+  "ESN engagée, nous accompagnons votre transformation numérique avec des solutions fiables, agiles et humaines, au service de vos projets et de votre croissance.",
 ];
 
 const CLOSING = "Bienvenue chez Jarvis Connect.";
@@ -101,7 +100,7 @@ export default function Mission() {
     <section
       ref={ref}
       data-nav-dark
-      className="flex min-h-dvh flex-col justify-center bg-black pb-24 pt-48 text-white"
+      className="flex min-h-dvh flex-col justify-center bg-black pb-16 pt-24 text-white sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-40 2xl:pt-48"
     >
       <div className="font-quote mx-auto w-full max-w-3xl px-6 sm:px-12">
         {blocks.map(({ text, start }, i) => (
@@ -109,15 +108,15 @@ export default function Mission() {
             key={i}
             className={
               i === 0
-                ? "text-3xl leading-snug text-white sm:text-4xl"
-                : "mt-6 text-xl leading-relaxed text-white/70 sm:text-2xl"
+                ? "text-xl leading-snug text-white sm:text-2xl lg:text-3xl 2xl:text-4xl"
+                : "mt-4 text-base leading-relaxed text-white/70 sm:mt-6 sm:text-lg lg:text-xl 2xl:text-2xl"
             }
           >
             <RevealText text={text} shown={shown} start={start} />
           </p>
         ))}
 
-        <p className="mt-10 text-3xl tracking-tight text-white sm:text-4xl">
+        <p className="mt-6 text-xl tracking-tight text-white sm:mt-10 sm:text-2xl lg:text-3xl 2xl:text-4xl">
           <RevealText text={CLOSING} shown={shown} start={closingStart} />
         </p>
 
@@ -129,7 +128,7 @@ export default function Mission() {
           alt="Signature"
           width={2508}
           height={627}
-          className={`mt-8 ml-auto block h-auto w-72 -rotate-[12deg] invert transition-all duration-700 ease-out sm:w-96 ${
+          className={`mt-6 ml-auto block h-auto w-48 -rotate-[12deg] invert transition-all duration-700 ease-out sm:mt-8 sm:w-64 lg:w-80 2xl:w-96 ${
             shown ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
           style={{ transitionDelay: shown ? `${signatureDelay}ms` : "0ms" }}

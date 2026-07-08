@@ -1,9 +1,11 @@
 import Menu from "../components/Menu";
 import Mission from "../components/Mission";
 import ScrollToTarget from "../components/ScrollToTarget";
+import ScrollUpHome from "../components/ScrollUpHome";
 import { ZoomParallax } from "../components/zoom-parallax";
 import ExpertiseGallery from "../components/ExpertiseGallery";
 import Clients from "../components/Clients";
+import Offres from "../components/Offres";
 
 // Images du parallaxe — PLACEHOLDERS (à remplacer par tes visuels de marque).
 const showcaseImages = [
@@ -43,6 +45,9 @@ export default function DecouvrirPage() {
       {/* Défile vers la section demandée si on arrive avec une cible (#...) */}
       <ScrollToTarget />
 
+      {/* En haut de page, scroller vers le haut ramène à l'accueil */}
+      <ScrollUpHome />
+
       <Menu />
 
       {/* Discours */}
@@ -68,6 +73,9 @@ export default function DecouvrirPage() {
 
       {/* Section clients : le scroll vertical reprend après la galerie */}
       <Clients />
+
+      {/* Section offres : image plein écran + grand titre révélé */}
+      <Offres />
     </main>
   );
 }

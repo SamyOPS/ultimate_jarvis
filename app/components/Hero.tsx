@@ -71,6 +71,37 @@ export default function Hero() {
     return () => window.clearTimeout(timer);
   }, []);
 
+  // Sur l'accueil, scroller vers le bas déclenche la même transition que le
+  // bouton « Nous découvrir » (le hero ne défile pas de lui-même).
+  useEffect(() => {
+    let triggered = false;
+    const go = () => {
+      // Ne rien faire si le menu est ouvert (scroll verrouillé) ou déjà lancé.
+      if (document.documentElement.style.overflow === "hidden") return;
+      if (triggered) return;
+      triggered = true;
+      navigate("/decouvrir");
+    };
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY > 15) go();
+    };
+    let startY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0]?.clientY ?? 0;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (startY - (e.touches[0]?.clientY ?? 0) > 40) go();
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [navigate]);
+
   // Parallaxe : le réacteur s'incline légèrement en suivant le curseur (3D).
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const { innerWidth, innerHeight } = window;
@@ -250,7 +281,7 @@ export default function Hero() {
       </figure>
 
       {/* Titre de marque + bouton, en bas de page, fondu à l'arrivée */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-5 px-2 pb-8 sm:pb-12">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-5 px-2 pb-8 sm:pb-12 laptop:gap-3 laptop:pb-6">
         <h1 className="animate-fade-in whitespace-nowrap font-sans text-center text-[10vw] font-bold uppercase leading-none tracking-tight text-zinc-900 laptop:text-[8vw]">
           Jarvis Connect
         </h1>
@@ -260,7 +291,7 @@ export default function Hero() {
         <button
           type="button"
           onClick={discover}
-          className="animate-fade-in pointer-events-auto inline-flex items-center gap-2 rounded-full border border-zinc-900 px-8 py-4 text-sm font-semibold uppercase tracking-tight text-zinc-900 transition-colors duration-300 hover:bg-zinc-900 hover:text-white"
+          className="animate-fade-in pointer-events-auto inline-flex items-center gap-2 rounded-full border border-zinc-900 px-8 py-4 text-sm font-semibold uppercase tracking-tight text-zinc-900 transition-colors duration-300 hover:bg-zinc-900 hover:text-white laptop:px-6 laptop:py-2.5 laptop:text-xs"
           style={{ animationDelay: "2.4s" }}
         >
           Nous découvrir

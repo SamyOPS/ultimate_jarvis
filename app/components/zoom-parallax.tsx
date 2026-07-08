@@ -2,6 +2,7 @@
 
 import {
   motion,
+  useInView,
   useScroll,
   useTransform,
   type MotionValue,
@@ -58,6 +59,10 @@ export function ZoomParallax({ images, title }: ZoomParallaxProps) {
 
   const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
+  // Déclenche la révélation « en volet » des images quand le parallaxe entre
+  // à l'écran (fiable, contrairement à un whileInView par image dans le sticky).
+  const inView = useInView(container, { once: true, amount: 0.1 });
+
   const letters = title ? [...title] : [];
 
   return (
@@ -72,14 +77,25 @@ export function ZoomParallax({ images, title }: ZoomParallaxProps) {
               style={{ scale }}
               className={`absolute top-0 flex h-full w-full items-center justify-center ${index === 1 ? "[&>div]:!-top-[30vh] [&>div]:!left-[5vw] [&>div]:!h-[30vh] [&>div]:!w-[35vw]" : ""} ${index === 2 ? "[&>div]:!-top-[10vh] [&>div]:!-left-[25vw] [&>div]:!h-[45vh] [&>div]:!w-[20vw]" : ""} ${index === 3 ? "[&>div]:!left-[27.5vw] [&>div]:!h-[25vh] [&>div]:!w-[25vw]" : ""} ${index === 4 ? "[&>div]:!top-[27.5vh] [&>div]:!left-[5vw] [&>div]:!h-[25vh] [&>div]:!w-[20vw]" : ""} ${index === 5 ? "[&>div]:!top-[27.5vh] [&>div]:!-left-[22.5vw] [&>div]:!h-[25vh] [&>div]:!w-[30vw]" : ""} ${index === 6 ? "[&>div]:!top-[22.5vh] [&>div]:!left-[25vw] [&>div]:!h-[15vh] [&>div]:!w-[15vw]" : ""} `}
             >
-              <div className="relative h-[25vh] w-[25vw]">
+              <motion.div
+                className="relative h-[25vh] w-[25vw]"
+                initial={{ clipPath: "inset(0 0 100% 0)" }}
+                animate={{
+                  clipPath: inView ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
+                }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: index * 0.08,
+                }}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src || "/placeholder.svg"}
                   alt={alt || `Image parallaxe ${index + 1}`}
                   className="h-full w-full object-cover"
                 />
-              </div>
+              </motion.div>
             </motion.div>
           );
         })}

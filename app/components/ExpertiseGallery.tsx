@@ -86,13 +86,26 @@ export default function ExpertiseGallery() {
     offset: ["start start", "end end"],
   });
 
-  // Le scroll vertical translate la piste horizontale. Chaque fiche fait 86vw
-  // et la piste a une marge de 7vw : la fiche active est centrée, avec un aperçu
-  // des voisines (les 4 catégories paraissent plus resserrées).
+  // Largeur d'une fiche (en vw), responsive : 86vw sur grand écran (avec un
+  // aperçu des voisines), pleine largeur sur mobile (fiches moins resserrées).
+  const [panelVw, setPanelVw] = useState(86);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const apply = () => setPanelVw(mq.matches ? 86 : 100);
+    const raf = requestAnimationFrame(apply);
+    mq.addEventListener("change", apply);
+    return () => {
+      cancelAnimationFrame(raf);
+      mq.removeEventListener("change", apply);
+    };
+  }, []);
+  const peek = (100 - panelVw) / 2;
+
+  // Le scroll vertical translate la piste horizontale (une fiche par écran).
   const x = useTransform(
     scrollYProgress,
     [0, 0.9],
-    ["0vw", `-${(items.length - 1) * 86}vw`]
+    ["0vw", `-${(items.length - 1) * panelVw}vw`]
   );
 
   // Détail plein écran. On mémorise la position/taille exacte de l'image
@@ -134,45 +147,44 @@ export default function ExpertiseGallery() {
       className="relative bg-white text-zinc-900"
     >
       <div className="sticky top-0 h-screen overflow-hidden">
-        <motion.div style={{ x }} className="flex h-full px-[7vw]">
+        <motion.div
+          style={{ x, paddingLeft: `${peek}vw`, paddingRight: `${peek}vw` }}
+          className="flex h-full"
+        >
           {items.map((it, i) => (
             <article
               key={it.index}
-              className="flex h-full w-[86vw] shrink-0 items-center gap-6 px-4 sm:gap-8 sm:px-6"
+              style={{ width: `${panelVw}vw` }}
+              className="flex h-full shrink-0 items-center gap-6 px-4 sm:gap-8 sm:px-6"
             >
               {/* Grande image rectangulaire, cliquable */}
               <button
                 type="button"
                 onClick={(e) => openImage(i, e.currentTarget)}
                 aria-label={`Voir le détail : ${it.title.join(" ")}`}
-                className="group relative h-[65vh] flex-1 overflow-hidden rounded-xl bg-zinc-100"
+                className="group relative h-[65vh] flex-1 overflow-hidden"
               >
                 <motion.img
                   src={it.image}
                   alt={it.title.join(" ")}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { duration: 0.4, ease: "easeOut" },
+                  }}
                   className={`absolute inset-0 h-full w-full object-cover ${
                     openIndex === i ? "opacity-0" : ""
                   }`}
                 />
-                <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+                <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
               </button>
 
               {/* Texte sur le côté : métadonnées en haut, titre en bas */}
-              <div className="flex h-[65vh] w-[26%] max-w-md shrink-0 flex-col justify-between">
-                <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-wide">
-                  <dt className="text-zinc-400">Domaine</dt>
-                  <dd className="text-zinc-900">{it.domaine}</dd>
-                  <dt className="text-zinc-400">Approche</dt>
-                  <dd className="text-zinc-900">{it.approche}</dd>
-                </dl>
-
+              <div className="flex h-[65vh] w-[42%] max-w-md shrink-0 flex-col justify-end sm:w-[36%] lg:w-[34%]">
                 <div>
                   <p className="mb-4 max-w-xs text-sm leading-relaxed text-zinc-500">
                     {it.desc}
                   </p>
-                  <h3 className="font-quote text-5xl leading-[0.95] sm:text-6xl">
+                  <h3 className="font-quote text-2xl leading-[1] sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
                     {it.title.map((line, li) => (
                       <span key={li} className="block">
                         {line}
