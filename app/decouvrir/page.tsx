@@ -3,6 +3,7 @@ import Mission from "../components/Mission";
 import ScrollToTarget from "../components/ScrollToTarget";
 import { ZoomParallax } from "../components/zoom-parallax";
 import ExpertiseGallery from "../components/ExpertiseGallery";
+import Clients from "../components/Clients";
 
 // Images du parallaxe — PLACEHOLDERS (à remplacer par tes visuels de marque).
 const showcaseImages = [
@@ -64,6 +65,9 @@ export default function DecouvrirPage() {
 
       {/* Détail des expertises : galerie horizontale (fond blanc) */}
       <ExpertiseGallery />
+
+      {/* Section clients : le scroll vertical reprend après la galerie */}
+      <Clients />
     </main>
   );
 }

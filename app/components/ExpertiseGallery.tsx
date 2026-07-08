@@ -138,7 +138,7 @@ export default function ExpertiseGallery() {
           {items.map((it, i) => (
             <article
               key={it.index}
-              className="flex h-full w-[86vw] shrink-0 items-center gap-6 px-6 sm:gap-10 sm:px-12"
+              className="flex h-full w-[86vw] shrink-0 items-center gap-6 px-4 sm:gap-8 sm:px-6"
             >
               {/* Grande image rectangulaire, cliquable */}
               <button
@@ -160,7 +160,7 @@ export default function ExpertiseGallery() {
               </button>
 
               {/* Texte sur le côté : métadonnées en haut, titre en bas */}
-              <div className="flex h-[65vh] w-[32%] max-w-lg shrink-0 flex-col justify-between">
+              <div className="flex h-[65vh] w-[26%] max-w-md shrink-0 flex-col justify-between">
                 <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-wide">
                   <dt className="text-zinc-400">Domaine</dt>
                   <dd className="text-zinc-900">{it.domaine}</dd>
