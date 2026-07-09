@@ -57,7 +57,7 @@ export default function DecouvrirPage() {
           Le titre « Expertises » se dévoile au fil du scroll pendant le zoom.
           Fond noir → barre en blanc. */}
       <section data-nav-dark className="relative bg-black">
-        <ZoomParallax images={showcaseImages} title="Expertises" />
+        <ZoomParallax images={showcaseImages} title="Expertises" eyebrow="nos" />
 
         {/* Cible du lien « Expertises » : positionnée à la fin du zoom (progress
             ~1, à 200vh sur les 300vh), quand le titre est entièrement affiché. */}

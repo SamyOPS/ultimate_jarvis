@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import ScrollProgress from "./ScrollProgress";
 
 type Direction = "down" | "up";
 
@@ -95,12 +96,21 @@ export default function PageTransition({
 
   return (
     <TransitionContext.Provider value={{ navigate, cover }}>
+      {/* Fond noir permanent derrière le contenu : quand le contenu glisse
+          pendant une transition, l'espace découvert (en haut ou en bas) reste
+          noir au lieu de laisser voir le fond blanc de la page. */}
+      <div aria-hidden className="fixed inset-0 -z-10 bg-black" />
       <div
         ref={contentEl}
         className="flex min-h-full flex-1 flex-col overflow-x-clip bg-black"
       >
         {children}
       </div>
+
+      {/* Barre de progression verticale (remplace la scrollbar native). Hors du
+          conteneur qui glisse, sous le voile (z-100) et le menu (z-40). */}
+      <ScrollProgress />
+
       <div
         aria-hidden
         className={`fixed inset-0 z-[100] bg-black transition-opacity duration-500 ease-in-out ${

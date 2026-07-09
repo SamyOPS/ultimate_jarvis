@@ -59,6 +59,7 @@ function Logo({
       <img
         src={src}
         alt={alt}
+        draggable={false}
         className={`w-auto max-w-[190px] object-contain ${
           big ? "h-10 sm:h-14 lg:h-16 2xl:h-20" : "h-6 sm:h-9 lg:h-10 2xl:h-12"
         } ${invert ? "brightness-0" : "mix-blend-multiply"}`}

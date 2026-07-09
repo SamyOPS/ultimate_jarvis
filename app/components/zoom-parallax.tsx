@@ -19,6 +19,8 @@ interface ZoomParallaxProps {
   images: Image[];
   /** Titre révélé lettre par lettre au fil du scroll (optionnel) */
   title?: string;
+  /** Petit mot d'accroche, au-dessus à gauche du titre (ex. « nos »). */
+  eyebrow?: string;
 }
 
 // Une lettre qui monte depuis sa ligne (comme les textes du menu), mais pilotée
@@ -44,12 +46,16 @@ function RevealLetter({
   );
 }
 
-export function ZoomParallax({ images, title }: ZoomParallaxProps) {
+export function ZoomParallax({ images, title, eyebrow }: ZoomParallaxProps) {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
   });
+
+  // Petit mot au-dessus du titre : monte depuis sa ligne (effet « volet »,
+  // comme le titre) juste avant que les lettres du titre se dévoilent.
+  const eyebrowY = useTransform(scrollYProgress, [0.45, 0.6], ["120%", "0%"]);
 
   const scale4 = useTransform(scrollYProgress, [0, 1], [1, 4]);
   const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
@@ -104,23 +110,35 @@ export function ZoomParallax({ images, title }: ZoomParallaxProps) {
             section expertises) */}
         {title && (
           <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
-            <h2 className="text-center font-sans text-[clamp(2.5rem,12vw,11rem)] font-bold uppercase leading-none tracking-tight text-white">
-              <span aria-label={title}>
-                {letters.map((char, i) => {
-                  const start = 0.55 + (i / letters.length) * 0.3;
-                  const end = start + 0.15;
-                  return (
-                    <RevealLetter
-                      key={i}
-                      char={char}
-                      progress={scrollYProgress}
-                      start={start}
-                      end={end}
-                    />
-                  );
-                })}
-              </span>
-            </h2>
+            <div className="flex flex-col items-start">
+              {eyebrow && (
+                <span
+                  aria-hidden
+                  className="reveal-mask mb-1 ml-[0.1em] px-[0.12em] font-quote text-[clamp(1.5rem,4.5vw,3.25rem)] italic leading-none text-white"
+                >
+                  <motion.span className="inline-block" style={{ y: eyebrowY }}>
+                    {eyebrow}
+                  </motion.span>
+                </span>
+              )}
+              <h2 className="font-sans text-[clamp(2.5rem,12vw,11rem)] font-bold uppercase leading-none tracking-tight text-white">
+                <span aria-label={`${eyebrow ? eyebrow + " " : ""}${title}`}>
+                  {letters.map((char, i) => {
+                    const start = 0.55 + (i / letters.length) * 0.3;
+                    const end = start + 0.15;
+                    return (
+                      <RevealLetter
+                        key={i}
+                        char={char}
+                        progress={scrollYProgress}
+                        start={start}
+                        end={end}
+                      />
+                    );
+                  })}
+                </span>
+              </h2>
+            </div>
           </div>
         )}
       </div>

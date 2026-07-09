@@ -167,6 +167,7 @@ export default function ExpertiseGallery() {
                 <motion.img
                   src={it.image}
                   alt={it.title.join(" ")}
+                  draggable={false}
                   whileHover={{
                     scale: 1.05,
                     transition: { duration: 0.4, ease: "easeOut" },
@@ -214,6 +215,7 @@ export default function ExpertiseGallery() {
             <motion.img
               src={active.image}
               alt={active.title.join(" ")}
+              draggable={false}
               initial={{
                 top: rect.top,
                 left: rect.left,

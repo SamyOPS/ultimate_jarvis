@@ -4,11 +4,31 @@
    Le rendu de base reste celui du grand écran ; on ne surcharge que sur portable. */
 @custom-variant laptop (@media (max-height: 900px));
 
-/* Réserve en permanence la gouttière de la barre de défilement : quand on
-   verrouille le scroll (menu ouvert), la barre disparaît sans décaler la page
-   ni faire « sauter » les éléments fixes de la navbar. */
-html {
-  scrollbar-gutter: stable;
+/* Scrollbar native masquée sur tout le site : la progression est indiquée par
+   une barre verticale personnalisée (composant ScrollProgress). Le défilement
+   reste évidemment fonctionnel.
+   On couvre html ET body (selon les navigateurs, la scrollbar du document est
+   portée par l'un ou l'autre) + un sélecteur universel pour tout conteneur
+   scrollable interne. */
+html,
+body {
+  scrollbar-width: none; /* Firefox + Chromium récents */
+  -ms-overflow-style: none; /* anciens Edge/IE */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important; /* Chrome, Safari, Edge (WebKit/Blink) */
+}
+
+/* Empêche « d'attraper » les images (fantôme de glisser-déposer natif du
+   navigateur) : les images sont verrouillées partout. Améliore aussi le
+   glisser à la main du carrousel clients (plus parasité par le drag natif). */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 /* Police plus douce (DM Sans) pour les pages de contenu. */
