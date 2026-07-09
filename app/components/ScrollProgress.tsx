@@ -25,7 +25,8 @@ export default function ScrollProgress() {
     let raf = 0;
     const check = () => {
       raf = 0;
-      // La page défile-t-elle vraiment ? (sinon barre inutile, ex. accueil)
+      // Barre affichée seulement si la page défile vraiment (donc pas sur
+      // l'accueil, qui tient sur un écran).
       const doc = document.documentElement;
       setVisible(doc.scrollHeight - window.innerHeight > 40);
       // Détection du fond au niveau vertical de la barre (centre de l'écran).
