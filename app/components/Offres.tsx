@@ -135,7 +135,7 @@ export default function Offres() {
       ref={sectionRef}
       id="offres"
       data-nav-dark
-      className="relative h-[350vh] scroll-mt-24 bg-black"
+      className="relative h-[350vh] bg-black"
     >
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Contenu révélé derrière */}
