@@ -377,8 +377,8 @@ export default function OffresIndex({
   revealTo: number;
 }) {
   // L'index « se pose » pendant que l'escalier le découvre (léger zoom arrière).
+  // Pas de montée d'opacité : il est à pleine intensité dès qu'on l'aperçoit.
   const scale = useTransform(progress, [revealFrom, revealTo], [1.06, 1]);
-  const opacity = useTransform(progress, [revealFrom, revealTo], [0.45, 1]);
 
   // Survol : souris fine uniquement (pas de suivi de curseur au tactile).
   const [pointer, setPointer] = useState(false);
@@ -421,10 +421,7 @@ export default function OffresIndex({
 
   return (
     <>
-      <motion.div
-        style={{ scale, opacity }}
-        className="absolute inset-0 bg-black"
-      >
+      <motion.div style={{ scale }} className="absolute inset-0 bg-black">
         <div
           ref={listRef}
           onMouseMove={(e) => {

@@ -6,6 +6,8 @@ import { ZoomParallax } from "../components/zoom-parallax";
 import ExpertiseGallery from "../components/ExpertiseGallery";
 import Clients from "../components/Clients";
 import Offres from "../components/Offres";
+import ImageBreak from "../components/ImageBreak";
+import Faq from "../components/Faq";
 
 // Images du parallaxe — PLACEHOLDERS (à remplacer par tes visuels de marque).
 const showcaseImages = [
@@ -76,6 +78,12 @@ export default function DecouvrirPage() {
 
       {/* Section offres : image plein écran + grand titre révélé */}
       <Offres />
+
+      {/* Image plein écran que le scroll dézoome en mosaïque */}
+      <ImageBreak />
+
+      {/* FAQ, en clôture de page */}
+      <Faq />
     </main>
   );
 }

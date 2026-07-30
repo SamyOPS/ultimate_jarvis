@@ -21,6 +21,14 @@ interface ZoomParallaxProps {
   title?: string;
   /** Petit mot d'accroche, au-dessus à gauche du titre (ex. « nos »). */
   eyebrow?: string;
+  /**
+   * Sens du zoom :
+   *  - `in` (défaut) : la mosaïque grandit jusqu'à ce que l'image centrale
+   *    remplisse l'écran (les autres sont repoussées hors cadre) ;
+   *  - `out` : l'inverse — on démarre sur l'image centrale en plein écran et le
+   *    scroll dézoome jusqu'à révéler la mosaïque complète.
+   */
+  direction?: "in" | "out";
 }
 
 // Une lettre qui monte depuis sa ligne (comme les textes du menu), mais pilotée
@@ -46,22 +54,30 @@ function RevealLetter({
   );
 }
 
-export function ZoomParallax({ images, title, eyebrow }: ZoomParallaxProps) {
+export function ZoomParallax({
+  images,
+  title,
+  eyebrow,
+  direction = "in",
+}: ZoomParallaxProps) {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
   });
+  // En mode `out`, les mêmes échelles sont simplement parcourues à l'envers :
+  // on part de l'agrandissement maximal pour revenir à la mosaïque (scale 1).
+  const out = direction === "out";
 
   // Petit mot au-dessus du titre : monte depuis sa ligne (effet « volet »,
   // comme le titre) juste avant que les lettres du titre se dévoilent.
   const eyebrowY = useTransform(scrollYProgress, [0.45, 0.6], ["120%", "0%"]);
 
-  const scale4 = useTransform(scrollYProgress, [0, 1], [1, 4]);
-  const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
-  const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6]);
-  const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8]);
-  const scale9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
+  const scale4 = useTransform(scrollYProgress, [0, 1], out ? [4, 1] : [1, 4]);
+  const scale5 = useTransform(scrollYProgress, [0, 1], out ? [5, 1] : [1, 5]);
+  const scale6 = useTransform(scrollYProgress, [0, 1], out ? [6, 1] : [1, 6]);
+  const scale8 = useTransform(scrollYProgress, [0, 1], out ? [8, 1] : [1, 8]);
+  const scale9 = useTransform(scrollYProgress, [0, 1], out ? [9, 1] : [1, 9]);
 
   const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 

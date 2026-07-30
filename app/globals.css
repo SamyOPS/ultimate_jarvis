@@ -172,6 +172,21 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+/* Même gravure, en clair : pour les sections sur fond sombre (FAQ). */
+.text-hatched-light {
+  background-image: repeating-linear-gradient(
+    45deg,
+    #fafafa 0,
+    #fafafa 1.5px,
+    transparent 1.5px,
+    transparent 7px
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Indicateur de scroll */
 @keyframes scroll-bob {
   0%,
