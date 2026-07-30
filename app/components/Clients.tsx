@@ -183,7 +183,7 @@ export default function Clients() {
 
   return (
     <section ref={ref} id="clients" className="bg-white pb-8 sm:pb-16 lg:pb-20 2xl:pb-32">
-      <div className="px-6 pt-12 sm:px-12 sm:pt-20 lg:pt-24 2xl:pt-32">
+      <div className="px-6 pt-6 sm:px-12 sm:pt-10 lg:pt-12 2xl:pt-16">
         <p className="font-quote text-2xl text-zinc-900 sm:text-3xl lg:text-4xl 2xl:text-5xl">
           Ils nous font confiance
         </p>

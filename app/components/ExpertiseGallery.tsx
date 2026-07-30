@@ -25,9 +25,11 @@ const items = [
       "Maintenance préventive et curative",
       "Gestion des incidents et des demandes",
     ],
-    title: ["Support", "informatique"],
+    title: "Support informatique",
     image:
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
+    image2:
+      "https://images.unsplash.com/photo-1557683316-973673baf926?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
   },
   {
     index: "02",
@@ -40,9 +42,11 @@ const items = [
       "Intégrations et API",
       "Maintenance évolutive",
     ],
-    title: ["Développement"],
+    title: "Développement",
     image:
       "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
+    image2:
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
   },
   {
     index: "03",
@@ -55,9 +59,11 @@ const items = [
       "Sensibilisation des équipes",
       "Mise en conformité (RGPD)",
     ],
-    title: ["Cybersécurité"],
+    title: "Cybersécurité",
     image:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
+    image2:
+      "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
   },
   {
     index: "04",
@@ -70,9 +76,11 @@ const items = [
       "Sauvegarde et plan de reprise",
       "Optimisation des coûts",
     ],
-    title: ["Infogérance", "& Cloud"],
+    title: "Infogérance & Cloud",
     image:
       "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
+    image2:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
   },
 ];
 
@@ -102,9 +110,11 @@ export default function ExpertiseGallery() {
   const peek = (100 - panelVw) / 2;
 
   // Le scroll vertical translate la piste horizontale (une fiche par écran).
+  // La piste finit à 0.96 : juste ce qu'il faut de scroll « mort » pour lire la
+  // dernière fiche, sans laisser un grand vide avant la section clients.
   const x = useTransform(
     scrollYProgress,
-    [0, 0.9],
+    [0, 0.96],
     ["0vw", `-${(items.length - 1) * panelVw}vw`]
   );
 
@@ -155,44 +165,53 @@ export default function ExpertiseGallery() {
             <article
               key={it.index}
               style={{ width: `${panelVw}vw` }}
-              className="flex h-full shrink-0 items-center gap-6 px-4 sm:gap-8 sm:px-6"
+              className="flex h-full shrink-0 flex-col justify-center gap-6 px-4 sm:gap-8 sm:px-6"
             >
-              {/* Grande image rectangulaire, cliquable */}
-              <button
-                type="button"
-                onClick={(e) => openImage(i, e.currentTarget)}
-                aria-label={`Voir le détail : ${it.title.join(" ")}`}
-                className="group relative h-[65vh] flex-1 overflow-hidden"
-              >
-                <motion.img
-                  src={it.image}
-                  alt={it.title.join(" ")}
-                  draggable={false}
-                  whileHover={{
-                    scale: 1.05,
-                    transition: { duration: 0.4, ease: "easeOut" },
-                  }}
-                  className={`absolute inset-0 h-full w-full object-cover ${
-                    openIndex === i ? "opacity-0" : ""
-                  }`}
-                />
-                <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
-              </button>
+              {/* Duo d'images : la grande, cliquable (zoom plein écran), et une
+                  seconde purement décorative là où se trouvait le texte. */}
+              {/* gap = 2× le px de l'article, pour que l'écart entre les deux
+                  images soit identique à celui entre deux fiches voisines. */}
+              <div className="flex h-[42vh] w-full gap-8 sm:h-[48vh] sm:gap-12 lg:h-[52vh]">
+                <button
+                  type="button"
+                  onClick={(e) => openImage(i, e.currentTarget)}
+                  aria-label={`Voir le détail : ${it.title}`}
+                  className="group relative h-full flex-1 overflow-hidden"
+                >
+                  <motion.img
+                    src={it.image}
+                    alt={it.title}
+                    draggable={false}
+                    whileHover={{
+                      scale: 1.05,
+                      transition: { duration: 0.4, ease: "easeOut" },
+                    }}
+                    className={`absolute inset-0 h-full w-full object-cover ${
+                      openIndex === i ? "opacity-0" : ""
+                    }`}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+                </button>
 
-              {/* Texte sur le côté : métadonnées en haut, titre en bas */}
-              <div className="flex h-[65vh] w-[42%] max-w-md shrink-0 flex-col justify-end sm:w-[36%] lg:w-[34%]">
-                <div>
-                  <p className="mb-4 max-w-xs text-sm leading-relaxed text-zinc-500">
-                    {it.desc}
-                  </p>
-                  <h3 className="font-quote text-2xl leading-[1] sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
-                    {it.title.map((line, li) => (
-                      <span key={li} className="block">
-                        {line}
-                      </span>
-                    ))}
-                  </h3>
+                <div className="pointer-events-none relative h-full w-[26%] shrink-0 overflow-hidden sm:w-[24%] lg:w-[22%]">
+                  <motion.img
+                    src={it.image2}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                 </div>
+              </div>
+
+              {/* Texte sous les images : titre puis description en dessous */}
+              <div className="flex w-full flex-col gap-3">
+                <h3 className="font-quote whitespace-nowrap text-3xl leading-[1] sm:text-4xl lg:text-5xl xl:text-6xl">
+                  {it.title}
+                </h3>
+                <p className="w-full text-sm leading-relaxed text-zinc-500 lg:whitespace-nowrap">
+                  {it.desc}
+                </p>
               </div>
             </article>
           ))}
@@ -208,13 +227,13 @@ export default function ExpertiseGallery() {
             key={openIndex}
             role="dialog"
             aria-modal="true"
-            aria-label={active.title.join(" ")}
+            aria-label={active.title}
             onClick={close}
             className="fixed inset-0 z-[80]"
           >
             <motion.img
               src={active.image}
-              alt={active.title.join(" ")}
+              alt={active.title}
               draggable={false}
               initial={{
                 top: rect.top,
