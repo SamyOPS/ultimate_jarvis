@@ -457,6 +457,34 @@ export default function OffresIndex({
                 onOpen={() => setOpen(i)}
               />
             ))}
+
+            {/* CTA vers le reste des offres. TODO : brancher la destination
+                (page « offres » ou site de recrutement) — bouton inerte pour
+                l'instant. Même vocabulaire que le CTA « Contactez nous » du menu. */}
+            <div className="mt-8 flex shrink-0 justify-center px-5 sm:mt-10">
+              <button
+                type="button"
+                className="group relative inline-flex cursor-pointer items-baseline gap-2 sm:gap-3"
+              >
+                <span className="font-quote text-[clamp(1.1rem,2.8vh,2rem)] italic leading-none text-white/55 transition-colors duration-300 group-hover:text-white">
+                  voir
+                </span>
+                <span className="text-[clamp(0.9rem,2.3vh,1.6rem)] font-bold uppercase leading-none tracking-tight text-white">
+                  toutes nos offres
+                </span>
+                <span
+                  aria-hidden
+                  className="text-[clamp(0.9rem,2.3vh,1.6rem)] leading-none text-white transition-transform duration-300 group-hover:translate-x-1.5"
+                >
+                  →
+                </span>
+                {/* Filet qui se déploie sous la ligne au survol */}
+                <span
+                  aria-hidden
+                  className="absolute -bottom-2 left-0 h-px w-full origin-left scale-x-0 bg-white transition-transform duration-500 ease-out group-hover:scale-x-100"
+                />
+              </button>
+            </div>
           </div>
 
           {/* Vignette suiveuse (souris uniquement) */}
