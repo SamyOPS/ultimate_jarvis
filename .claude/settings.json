@@ -26,7 +26,8 @@
       "PowerShell(npm install framer-motion 2>&1)",
       "Bash(node -p \"require\\('framer-motion/package.json'\\).version\")",
       "PowerShell(npm run build 2>&1)",
-      "PowerShell(npx tsc --noEmit)"
+      "PowerShell(npx tsc --noEmit)",
+      "Bash(npm run *)"
     ]
   }
 }

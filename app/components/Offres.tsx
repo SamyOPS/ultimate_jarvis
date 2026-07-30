@@ -8,21 +8,31 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useRef, useState } from "react";
+import OffresIndex from "./OffresIndex";
 
-// Réglages (progression du scroll : 0 → 1).
-// Séquence : texte pleinement visible → fondu net → (texte disparu) → escalier.
+// Réglages. Le capot est épinglé sur 100vh : la section mesure SECTION_VH, donc
+// il reste SCROLL_VH de scroll utile, que `scrollYProgress` mappe sur 0 → 1.
+// Les réglages sont exprimés en vh de scroll (via `p`) et non en progression
+// brute : la hauteur de la section peut changer sans dérégler l'escalier.
+const SECTION_VH = 430;
+const SCROLL_VH = SECTION_VH - 100;
+const p = (vh: number) => vh / SCROLL_VH;
+
+// Séquence : texte pleinement visible → fondu net → (texte disparu) → escalier
+// → ~90vh d'index épinglé, révélé et pleinement manipulable.
 const BANDS = 5; // nombre de marches
-const OPEN_START = 0.3; // la marche du bas s'ouvre (l'image commence à s'ouvrir)
-const STAGGER = 0.1; // décalage d'ouverture entre deux marches
-const DURATION = 0.26; // durée d'ouverture d'une marche
+const OPEN_START = p(75); // la marche du bas s'ouvre (l'image commence à s'ouvrir)
+const STAGGER = p(25); // décalage d'ouverture entre deux marches
+const DURATION = p(65); // durée d'ouverture d'une marche
+const BANDS_END = OPEN_START + (BANDS - 1) * STAGGER + DURATION; // escalier fini
 // Titre : affiché tant que l'image est entière, masqué juste avant l'ouverture.
 // Deux seuils (hystérésis) pour éviter tout clignotement « disparaît/réapparaît »
 // sur un petit mouvement de scroll ou le jitter d'épinglage :
 //  - on MASQUE en franchissant HIDE_AT (juste avant l'ouverture) ;
 //  - on ne RÉAFFICHE qu'en repassant sous SHOW_AT (bien plus bas) ;
 //  - entre les deux, l'état ne change pas.
-const TITLE_HIDE_AT = OPEN_START - 0.06; // 0.24
-const TITLE_SHOW_AT = 0.1;
+const TITLE_HIDE_AT = OPEN_START - p(15);
+const TITLE_SHOW_AT = p(25);
 const BLEED = 0.5; // léger chevauchement vertical entre marches (anti-liseré)
 // L'image étant opaque (assombrie via brightness), les recouvrements ne
 // cumulent aucune transparence : pas de couture visible entre les morceaux.
@@ -115,12 +125,6 @@ function TitleOverlay({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-// Ce qui apparaît derrière l'image une fois les marches ouvertes.
-// Pour l'instant : simple fond noir (le contenu des offres viendra plus tard).
-function OffersBehind() {
-  return <div className="absolute inset-0 bg-black" />;
-}
-
 export default function Offres() {
   // Section haute + capot épinglé (sticky) : le scroll efface le texte puis
   // écarte les marches.
@@ -135,11 +139,16 @@ export default function Offres() {
       ref={sectionRef}
       id="offres"
       data-nav-dark
-      className="relative h-[350vh] bg-black"
+      style={{ height: `${SECTION_VH}vh` }}
+      className="relative bg-black"
     >
       <div className="sticky top-0 h-screen overflow-hidden">
-        {/* Contenu révélé derrière */}
-        <OffersBehind />
+        {/* Contenu révélé derrière : l'index des postes ouverts */}
+        <OffresIndex
+          progress={scrollYProgress}
+          revealFrom={OPEN_START}
+          revealTo={BANDS_END}
+        />
 
         {/* Capot en marches (du bas vers le haut) */}
         {Array.from({ length: BANDS }, (_, i) => (
