@@ -59,11 +59,22 @@ const mainLinks = [
   { label: "FAQ", href: "/decouvrir#faq" },
 ];
 
+// Bouton « Offres d'emploi » du panneau. La section offres a laissé la place aux
+// formations : il n'y a plus de page dédiée.
+// TODO : remplacer par la future page /offres (et repasser sur <Link> + onNav
+// pour bénéficier de la transition de page). En attendant, lien fonctionnel vers
+// une candidature par e-mail.
+const JOBS_HREF =
+  "mailto:recrutement@jarvis-connect.fr?subject=Candidature%20spontan%C3%A9e";
+
 // Liens secondaires (colonne de droite)
 const infoLinks = [
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGU", href: "/cgu" },
-  { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
+  {
+    label: "Politique de confidentialité",
+    href: "/politique-de-confidentialite",
+  },
   { label: "S'inscrire à la newsletter", href: "#newsletter" },
 ];
 
@@ -168,7 +179,9 @@ export default function Menu() {
       close();
       window.setTimeout(() => {
         if (anchor) {
-          document.querySelector(anchor)?.scrollIntoView({ behavior: "smooth" });
+          document
+            .querySelector(anchor)
+            ?.scrollIntoView({ behavior: "smooth" });
         } else {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
@@ -283,8 +296,15 @@ export default function Menu() {
 
             <div className="hidden shrink-0 flex-col gap-8 text-sm sm:flex">
               <div className="flex flex-col gap-2">
-                <span className={`text-xs font-semibold uppercase tracking-[0.2em] ${panel.label}`}>
-                  <RevealChars text="Contact" open={open} base={700} step={22} />
+                <span
+                  className={`text-xs font-semibold uppercase tracking-[0.2em] ${panel.label}`}
+                >
+                  <RevealChars
+                    text="Contact"
+                    open={open}
+                    base={700}
+                    step={22}
+                  />
                 </span>
                 {infoLinks.map((link, k) => (
                   <Link
@@ -304,7 +324,9 @@ export default function Menu() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className={`text-xs font-semibold uppercase tracking-[0.2em] ${panel.label}`}>
+                <span
+                  className={`text-xs font-semibold uppercase tracking-[0.2em] ${panel.label}`}
+                >
                   <RevealChars
                     text="Membre de Jarvis"
                     open={open}
@@ -346,45 +368,90 @@ export default function Menu() {
                     </span>
                   </span>
                 </Link>
+
+                {/* Offres d'emploi : même traitement que le lien ci-dessus
+                    (révélation lettre par lettre puis la flèche), la cascade
+                    reprenant là où « Accéder à mon espace » s'arrête. */}
+                <a
+                  href={JOBS_HREF}
+                  onClick={close}
+                  className={`inline-flex items-center gap-1 font-medium uppercase tracking-tight transition-colors ${panel.info}`}
+                >
+                  <RevealChars
+                    text="Offres d'emploi"
+                    open={open}
+                    base={1420}
+                    step={14}
+                  />
+                  <span aria-hidden className="reveal-mask">
+                    <span
+                      className={`inline-block transition-transform duration-700 ease-out ${
+                        open ? "translate-y-0" : "translate-y-full"
+                      }`}
+                      style={{ transitionDelay: open ? "1620ms" : "0ms" }}
+                    >
+                      <svg
+                        className="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <line x1="7" y1="17" x2="17" y2="7" />
+                        <polyline points="7 7 17 7 17 17" />
+                      </svg>
+                    </span>
+                  </span>
+                </a>
               </div>
             </div>
           </div>
 
           {/* Pied : réseaux sociaux en bas à droite */}
-          <div className="flex justify-end gap-3">
-            <a
-              href="https://www.linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
-            >
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4 0 4.75 2.65 4.75 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.05 1.4-2.05 2.85V21H10V9Z" />
-              </svg>
-            </a>
-            <a
-              href="https://www.instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
-            >
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
+          <div className="flex justify-end">
+            <div className="flex gap-3">
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
               >
-                <rect x="2" y="2" width="20" height="20" rx="5" />
-                <circle cx="12" cy="12" r="4" />
-                <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
-              </svg>
-            </a>
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden
+                >
+                  <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4 0 4.75 2.65 4.75 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.05 1.4-2.05 2.85V21H10V9Z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
+              >
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </aside>

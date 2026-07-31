@@ -28,7 +28,8 @@
       "PowerShell(npm run build 2>&1)",
       "PowerShell(npx tsc --noEmit)",
       "Bash(npm run *)",
-      "Bash(awk 'NR>=400' app/components/OffresIndex.tsx)"
+      "Bash(awk 'NR>=400' app/components/OffresIndex.tsx)",
+      "Bash(npx prettier *)"
     ]
   }
 }
