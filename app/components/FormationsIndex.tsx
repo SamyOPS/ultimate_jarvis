@@ -11,140 +11,100 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { lockScroll, unlockScroll } from "../lib/scrollLock";
 
-// Contenu révélé derrière le capot en escalier (composant Offres) : un index
-// typographique des postes ouverts, pas une liste.
-//  - une ligne = un poste, titre en capitales, filets pleine largeur ;
+// Contenu révélé derrière le capot en escalier (composant Formations) : un index
+// typographique des modules, pas une liste.
+//  - une ligne = un module, titre en capitales, filets pleine largeur ;
 //  - au survol (souris uniquement) : balayage blanc, texte inversé, les autres
 //    lignes s'estompent, et une image portrait suit le curseur ;
-//  - au clic : panneau plein écran (image + typo + missions + candidature).
+//  - au clic : panneau plein écran (image + typo + programme + contact).
 // Images = PLACEHOLDERS.
 
-// TODO : adresse de réception des candidatures à confirmer.
-const CONTACT_EMAIL = "recrutement@jarvis-connect.fr";
+// TODO : adresse de contact formations à confirmer.
+const CONTACT_EMAIL = "contact@jarvis-connect.fr";
 
 // Même courbe que les autres transitions du site (départ lent → sortie douce).
 const EASE = [0.83, 0, 0.17, 1] as const;
 
-type Offre = {
+type Formation = {
   index: string;
   title: string;
-  sub: string;
-  contrat: string;
-  lieu: string;
-  equipe: string;
+  format: string;
+  duree: string;
+  public: string;
   desc: string;
-  missions: string[];
-  profil: string[];
+  programme: string[];
   image: string;
 };
 
-const offres: Offre[] = [
+export const formations: Formation[] = [
   {
     index: "01",
-    title: "Technicien support",
-    sub: "Support de proximité — niveau 1 / 2",
-    contrat: "CDI",
-    lieu: "Paris",
-    equipe: "Support",
-    desc: "Vous êtes le premier réflexe des utilisateurs. Au sein d'une équipe de proximité, vous prenez en charge les incidents et les demandes, de la prise d'appel à la résolution, chez nos clients grands comptes.",
-    missions: [
-      "Prise en charge des incidents et demandes (téléphone, ticket, présentiel)",
-      "Diagnostic et résolution niveau 1 / 2 sur poste de travail et périphériques",
-      "Préparation, masterisation et déploiement des équipements",
-      "Documentation des procédures et alimentation de la base de connaissances",
-    ],
-    profil: [
-      "Bac +2 informatique ou expérience équivalente",
-      "Windows 10 / 11, Active Directory, Office 365",
-      "Sens du service et vraie aisance relationnelle",
+    title: "Parcours support et supervision",
+    format: "Atelier",
+    duree: "2 jours",
+    public: "Support N1/N2",
+    desc: "Modules pratiques sur la gestion des incidents, l'escalade, la supervision, la communication et les standards ITIL.",
+    // Découpage de la description ci-dessus, à compléter avec le vrai programme.
+    programme: [
+      "Gestion des incidents",
+      "Escalade et coordination",
+      "Supervision",
+      "Communication utilisateur",
+      "Standards ITIL",
     ],
     image:
       "https://images.unsplash.com/photo-1557683316-973673baf926?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
   },
   {
     index: "02",
-    title: "Développeur full-stack",
-    sub: "Applications métiers — React / Node",
-    contrat: "CDI",
-    lieu: "Paris",
-    equipe: "Applicatif",
-    desc: "Vous concevez les outils métiers de nos clients, du cadrage du besoin à la mise en production. Des projets courts, très proches des utilisateurs, où vous avez la main sur l'ensemble de la chaîne.",
-    missions: [
-      "Cadrage technique et estimation avec le client",
-      "Développement front et back d'applications sur mesure",
-      "Conception et intégration d'API avec le SI existant",
-      "Mise en production, suivi et maintenance évolutive",
-    ],
-    profil: [
-      "3 ans d'expérience minimum sur des projets web",
-      "TypeScript, React / Next.js, Node.js, SQL",
-      "Goût du produit et du travail au contact des utilisateurs",
+    title: "Ateliers outillage",
+    format: "Pratique",
+    duree: "1 jour",
+    public: "Équipes IT",
+    desc: "Prise en main des outils de ticketing, supervision, MDM et automatisation pour gagner en efficacité.",
+    programme: [
+      "Outils de ticketing",
+      "Supervision",
+      "MDM",
+      "Automatisation",
     ],
     image:
       "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
   },
   {
     index: "03",
-    title: "Ingénieur cybersécurité",
-    sub: "Audit, durcissement & conformité",
-    contrat: "CDI",
-    lieu: "Lyon",
-    equipe: "Sécurité",
-    desc: "Vous évaluez le niveau de sécurité de nos clients, corrigez ce qui doit l'être et embarquez leurs équipes. Un poste qui mêle technique, conseil et pédagogie.",
-    missions: [
-      "Audits techniques et organisationnels, tests d'intrusion",
-      "Durcissement des systèmes, réseaux et environnements cloud",
-      "Réponse à incident et analyse post-mortem",
-      "Sensibilisation des équipes et mise en conformité RGPD",
-    ],
-    profil: [
-      "Bac +5 avec spécialisation sécurité",
-      "Réseaux, systèmes, EDR / SIEM, outillage offensif",
-      "Capacité à expliquer un risque à un non-technicien",
+    title: "Coaching gestes techniques",
+    format: "Coaching",
+    duree: "1/2 jour",
+    public: "Techniciens",
+    desc: "Bonnes pratiques de diagnostic, sécurisation poste, scripts d'intervention et relation utilisateur.",
+    programme: [
+      "Bonnes pratiques de diagnostic",
+      "Sécurisation du poste",
+      "Scripts d'intervention",
+      "Relation utilisateur",
     ],
     image:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
   },
-  {
-    index: "04",
-    title: "Admin système & cloud",
-    sub: "Infogérance — Azure / Microsoft 365",
-    contrat: "CDI",
-    lieu: "Paris",
-    equipe: "Cloud",
-    desc: "Vous maintenez en condition opérationnelle les infrastructures que nous infogérons, et vous accompagnez leur migration vers le cloud. Disponibilité, sauvegarde, maîtrise des coûts.",
-    missions: [
-      "Administration des environnements Windows Server et Azure",
-      "Migration d'infrastructures on-premise vers le cloud",
-      "Supervision, sauvegarde et plan de reprise d'activité",
-      "Automatisation des tâches récurrentes (PowerShell, IaC)",
-    ],
-    profil: [
-      "4 ans d'expérience en administration système",
-      "Azure, Microsoft 365, virtualisation, réseau",
-      "Rigueur et réflexe documentaire",
-    ],
-    image:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
-  },
 ];
 
-const mailto = (o: Offre) =>
+const mailto = (f: Formation) =>
   `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    `Candidature — ${o.title}`
+    `Formation — ${f.title}`
   )}`;
 
 // Une ligne de l'index. Le survol est piloté par l'état du parent (et non par
 // `group-hover`) car il faut aussi estomper les AUTRES lignes.
 function Row({
-  o,
+  f,
   last,
   active,
   dim,
   onHover,
   onOpen,
 }: {
-  o: Offre;
+  f: Formation;
   last: boolean;
   active: boolean;
   dim: boolean;
@@ -159,18 +119,18 @@ function Row({
       onFocus={() => onHover(true)}
       onBlur={() => onHover(false)}
       onClick={onOpen}
-      aria-label={`Voir l'offre : ${o.title}`}
-      className={`relative flex h-[18vh] min-h-[86px] shrink-0 cursor-pointer items-center overflow-hidden border-white/15 text-left ${
+      aria-label={`Découvrir le module : ${f.title}`}
+      className={`relative flex h-[18vh] min-h-[86px] shrink-0 cursor-pointer items-center overflow-hidden border-zinc-900/15 text-left ${
         last ? "border-y" : "border-t"
       }`}
     >
-      {/* Balayage blanc qui monte depuis le bas de la ligne */}
+      {/* Balayage noir qui monte depuis le bas de la ligne */}
       <motion.span
         aria-hidden
         initial={false}
         animate={{ y: active ? "0%" : "101%" }}
         transition={{ duration: 0.55, ease: EASE }}
-        className="absolute inset-0 bg-white"
+        className="absolute inset-0 bg-zinc-900"
       />
 
       <motion.span
@@ -178,21 +138,24 @@ function Row({
         animate={{ x: active ? 12 : 0 }}
         transition={{ duration: 0.55, ease: EASE }}
         className={`relative flex w-full items-center gap-4 px-5 transition-colors duration-500 sm:gap-8 sm:px-10 ${
-          active ? "text-black" : dim ? "text-white/25" : "text-white"
+          active ? "text-white" : dim ? "text-zinc-900/25" : "text-zinc-900"
         }`}
       >
         <span className="font-quote w-7 shrink-0 text-base italic sm:w-9 sm:text-xl">
-          {o.index}
+          {f.index}
         </span>
 
         <span className="min-w-0 flex-1 truncate text-[clamp(1rem,5vw,1.5rem)] font-bold uppercase leading-[0.95] tracking-tight sm:text-[clamp(1.25rem,5.4vh,3.75rem)]">
-          {o.title}
+          {f.title}
         </span>
 
         <span className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] sm:block">
-          {o.contrat}
-          <span className={active ? "text-black/40" : "text-white/40"}> · </span>
-          {o.lieu}
+          {f.duree}
+          <span className={active ? "text-white/40" : "text-zinc-900/40"}>
+            {" "}
+            ·{" "}
+          </span>
+          {f.format}
         </span>
 
         <motion.span
@@ -209,14 +172,14 @@ function Row({
   );
 }
 
-// Panneau plein écran d'une offre : image d'un côté, typo de l'autre.
-// Le contenu réapparaît en cascade à chaque changement d'offre (clé = index).
+// Panneau plein écran d'un module : image d'un côté, typo de l'autre.
+// Le contenu réapparaît en cascade à chaque changement de module (clé = index).
 function Detail({
-  o,
+  f,
   onClose,
   onNext,
 }: {
-  o: Offre;
+  f: Formation;
   onClose: () => void;
   onNext: () => void;
 }) {
@@ -233,7 +196,7 @@ function Detail({
     <motion.div
       role="dialog"
       aria-modal="true"
-      aria-label={o.title}
+      aria-label={f.title}
       initial={{ y: "100%" }}
       animate={{ y: "0%" }}
       exit={{ y: "100%" }}
@@ -245,7 +208,7 @@ function Detail({
       <button
         type="button"
         onClick={onClose}
-        aria-label="Fermer l'offre"
+        aria-label="Fermer le module"
         className="group absolute bottom-6 right-5 z-10 flex cursor-pointer items-center gap-2 rounded-full border border-white/25 bg-black/70 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-white backdrop-blur transition-colors hover:bg-white hover:text-black sm:bottom-8 sm:right-10"
       >
         Fermer
@@ -257,7 +220,7 @@ function Detail({
       <div className="grid h-full grid-cols-1 lg:grid-cols-[1fr_0.78fr]">
         {/* Texte */}
         <motion.div
-          key={o.index}
+          key={f.index}
           variants={stack}
           initial="hidden"
           animate="show"
@@ -267,74 +230,67 @@ function Detail({
             variants={line}
             className="font-quote text-lg italic text-white/50 sm:text-2xl"
           >
-            offre {o.index}
+            module {f.index}
           </motion.p>
 
           <motion.h3
             variants={line}
             className="mt-1 text-[clamp(2rem,5.6vw,4.5rem)] font-bold uppercase leading-[0.92] tracking-tight"
           >
-            {o.title}
+            {f.title}
           </motion.h3>
 
           <motion.p
             variants={line}
             className="mt-3 text-sm text-white/60 sm:text-base"
           >
-            {o.sub}
+            {f.format} — {f.public}
           </motion.p>
 
           <motion.div
             variants={line}
             className="mt-7 flex flex-wrap gap-x-8 gap-y-2 border-y border-white/10 py-4 font-mono text-[10px] uppercase tracking-[0.18em] text-white/50"
           >
-            <span>{o.contrat}</span>
-            <span>{o.lieu}</span>
-            <span>Pôle {o.equipe}</span>
+            <span>{f.duree}</span>
+            <span>{f.public}</span>
+            <span>{f.format}</span>
           </motion.div>
 
           <motion.p
             variants={line}
             className="mt-8 max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base"
           >
-            {o.desc}
+            {f.desc}
           </motion.p>
 
-          <div className="mt-12 grid gap-10 sm:grid-cols-2 sm:gap-14">
-            {[
-              { label: "Vos missions", items: o.missions },
-              { label: "Votre profil", items: o.profil },
-            ].map((bloc) => (
-              <motion.div key={bloc.label} variants={line}>
-                <p className="font-quote text-xl italic text-white/70 sm:text-2xl">
-                  {bloc.label}
-                </p>
-                <ul className="mt-4 border-t border-white/10">
-                  {bloc.items.map((txt, k) => (
-                    <li
-                      key={txt}
-                      className="flex gap-4 border-b border-white/10 py-3 text-sm leading-relaxed text-white/70"
-                    >
-                      <span className="mt-[3px] shrink-0 font-mono text-[10px] text-white/35">
-                        0{k + 1}
-                      </span>
-                      {txt}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div variants={line} className="mt-12 max-w-2xl">
+            <p className="font-quote text-xl italic text-white/70 sm:text-2xl">
+              Au programme
+            </p>
+            <ul className="mt-4 border-t border-white/10">
+              {f.programme.map((txt, k) => (
+                <li
+                  key={txt}
+                  className="flex gap-4 border-b border-white/10 py-3 text-sm leading-relaxed text-white/70"
+                >
+                  <span className="mt-[3px] shrink-0 font-mono text-[10px] text-white/35">
+                    0{k + 1}
+                  </span>
+                  {txt}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
 
           <motion.div
             variants={line}
             className="mt-14 flex flex-wrap items-center gap-x-10 gap-y-4"
           >
             <a
-              href={mailto(o)}
+              href={mailto(f)}
               className="group relative text-[clamp(1.5rem,3.4vw,2.75rem)] font-bold uppercase leading-none tracking-tight"
             >
-              Postuler
+              Nous contacter
               <span className="absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 bg-white transition-transform duration-500 ease-out group-hover:scale-x-100" />
             </a>
 
@@ -343,7 +299,7 @@ function Detail({
               onClick={onNext}
               className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.18em] text-white/50 transition-colors hover:text-white"
             >
-              Offre suivante →
+              Module suivant →
             </button>
           </motion.div>
         </motion.div>
@@ -351,8 +307,8 @@ function Detail({
         {/* Image : bandeau en haut sur mobile, colonne pleine hauteur sur grand écran */}
         <div className="order-1 h-[34vh] overflow-hidden lg:order-2 lg:h-full">
           <motion.img
-            key={o.image}
-            src={o.image}
+            key={f.image}
+            src={f.image}
             alt=""
             aria-hidden="true"
             draggable={false}
@@ -367,7 +323,7 @@ function Detail({
   );
 }
 
-export default function OffresIndex({
+export default function FormationsIndex({
   progress,
   revealFrom,
   revealTo,
@@ -421,7 +377,7 @@ export default function OffresIndex({
 
   return (
     <>
-      <motion.div style={{ scale }} className="absolute inset-0 bg-black">
+      <motion.div style={{ scale }} className="absolute inset-0 bg-white">
         <div
           ref={listRef}
           onMouseMove={(e) => {
@@ -436,11 +392,11 @@ export default function OffresIndex({
           {/* Bloc de lignes à hauteur fixe, centré verticalement : il respire
               dans l'écran épinglé au lieu de l'occuper entièrement. */}
           <div className="flex min-h-0 flex-1 flex-col justify-center">
-            {offres.map((o, i) => (
+            {formations.map((f, i) => (
               <Row
-                key={o.index}
-                o={o}
-                last={i === offres.length - 1}
+                key={f.index}
+                f={f}
+                last={i === formations.length - 1}
                 active={hovered === i}
                 dim={hovered !== null && hovered !== i}
                 onHover={(v) => {
@@ -455,32 +411,33 @@ export default function OffresIndex({
               />
             ))}
 
-            {/* CTA vers le reste des offres. TODO : brancher la destination
-                (page « offres » ou site de recrutement) — bouton inerte pour
-                l'instant. Même vocabulaire que le CTA « Contactez nous » du menu. */}
+            {/* CTA de section, centré : jeu serif italique / capitales, filet
+                qui se déploie au survol. Lien mailto (déjà fonctionnel). */}
             <div className="mt-8 flex shrink-0 justify-center px-5 sm:mt-10">
-              <button
-                type="button"
-                className="group relative inline-flex cursor-pointer items-baseline gap-2 sm:gap-3"
+              <a
+                href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+                  "Formations"
+                )}`}
+                className="group relative inline-flex items-baseline gap-2 sm:gap-3"
               >
-                <span className="font-quote text-[clamp(1.1rem,2.8vh,2rem)] italic leading-none text-white/55 transition-colors duration-300 group-hover:text-white">
-                  voir
+                <span className="font-quote text-[clamp(1.1rem,2.8vh,2rem)] italic leading-none text-zinc-500 transition-colors duration-300 group-hover:text-zinc-900">
+                  nous
                 </span>
-                <span className="text-[clamp(0.9rem,2.3vh,1.6rem)] font-bold uppercase leading-none tracking-tight text-white">
-                  toutes nos offres
+                <span className="text-[clamp(0.9rem,2.3vh,1.6rem)] font-bold uppercase leading-none tracking-tight text-zinc-900">
+                  contacter
                 </span>
                 <span
                   aria-hidden
-                  className="text-[clamp(0.9rem,2.3vh,1.6rem)] leading-none text-white transition-transform duration-300 group-hover:translate-x-1.5"
+                  className="text-[clamp(0.9rem,2.3vh,1.6rem)] leading-none text-zinc-900 transition-transform duration-300 group-hover:translate-x-1.5"
                 >
                   →
                 </span>
                 {/* Filet qui se déploie sous la ligne au survol */}
                 <span
                   aria-hidden
-                  className="absolute -bottom-2 left-0 h-px w-full origin-left scale-x-0 bg-white transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  className="absolute -bottom-2 left-0 h-px w-full origin-left scale-x-0 bg-zinc-900 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
-              </button>
+              </a>
             </div>
           </div>
 
@@ -503,8 +460,8 @@ export default function OffresIndex({
                 className="overflow-hidden"
               >
                 <motion.img
-                  key={offres[hovered ?? lastHovered].image}
-                  src={offres[hovered ?? lastHovered].image}
+                  key={formations[hovered ?? lastHovered].image}
+                  src={formations[hovered ?? lastHovered].image}
                   alt=""
                   draggable={false}
                   className="aspect-[4/5] w-[clamp(150px,13vw,230px)] object-cover"
@@ -519,9 +476,9 @@ export default function OffresIndex({
       <AnimatePresence>
         {open !== null && (
           <Detail
-            o={offres[open]}
+            f={formations[open]}
             onClose={close}
-            onNext={() => setOpen((i) => ((i ?? 0) + 1) % offres.length)}
+            onNext={() => setOpen((i) => ((i ?? 0) + 1) % formations.length)}
           />
         )}
       </AnimatePresence>

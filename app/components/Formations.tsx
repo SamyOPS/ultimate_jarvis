@@ -8,7 +8,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useRef, useState } from "react";
-import OffresIndex from "./OffresIndex";
+import FormationsIndex, { formations } from "./FormationsIndex";
 
 // Réglages. Le capot est épinglé sur 100vh : la section mesure SECTION_VH, donc
 // il reste SCROLL_VH de scroll utile, que `scrollYProgress` mappe sur 0 → 1.
@@ -33,6 +33,10 @@ const BANDS_END = OPEN_START + (BANDS - 1) * STAGGER + DURATION; // escalier fin
 //  - entre les deux, l'état ne change pas.
 const TITLE_HIDE_AT = OPEN_START - p(15);
 const TITLE_SHOW_AT = p(25);
+// La marche du HAUT (celle qui passe sous la barre de navigation) est la
+// dernière à s'écarter : la barre reste en thème sombre jusqu'à ce qu'elle soit
+// largement dégagée, 20vh avant la fin de l'escalier.
+const NAV_DARK_UNTIL = BANDS_END - p(20);
 const BLEED = 0.5; // léger chevauchement vertical entre marches (anti-liseré)
 // L'image étant opaque (assombrie via brightness), les recouvrements ne
 // cumulent aucune transparence : pas de couture visible entre les morceaux.
@@ -92,7 +96,29 @@ function Band({
   );
 }
 
-// Titre « nos Offres d'emploi » : calque unique au-dessus du capot. Affiché/
+// Thème de la barre de navigation. Le capot est sombre (barre en blanc) mais
+// l'index révélé derrière est sur fond blanc (barre en noir) : le marqueur
+// `data-nav-dark` ne peut donc pas être posé sur la section, il n'est rendu que
+// pendant la phase « capot ». Même hystérésis que le titre, pour ne pas
+// clignoter quand on s'arrête pile sur le seuil.
+function NavDarkWhileCovered({ progress }: { progress: MotionValue<number> }) {
+  const [dark, setDark] = useState(true);
+  useMotionValueEvent(progress, "change", (v) => {
+    if (v >= NAV_DARK_UNTIL) setDark(false);
+    else if (v <= NAV_DARK_UNTIL - p(30)) setDark(true);
+  });
+
+  if (!dark) return null;
+  return (
+    <div
+      data-nav-dark
+      aria-hidden
+      className="pointer-events-none absolute inset-0"
+    />
+  );
+}
+
+// Titre « nos Formations » : calque unique au-dessus du capot. Affiché/
 // masqué par un état à hystérésis (voir seuils ci-dessus) ; le fondu est une
 // transition CSS basée sur le TEMPS (pas sur la position exacte du scroll),
 // donc il ne peut pas « repartir en arrière » au moindre soubresaut.
@@ -115,17 +141,17 @@ function TitleOverlay({ progress }: { progress: MotionValue<number> }) {
           nos
         </span>
         <h2 className="text-[clamp(2.5rem,9vw,8rem)] font-bold uppercase leading-[0.95] tracking-tight text-white">
-          Offres
+          Formations
         </h2>
         <span className="mt-1 mr-[0.1em] self-end font-quote text-[clamp(1.1rem,3.5vw,2.5rem)] italic leading-none text-white/90">
-          d&apos;emploi
+          {formations.length} modules
         </span>
       </div>
     </div>
   );
 }
 
-export default function Offres() {
+export default function Formations() {
   // Section haute + capot épinglé (sticky) : le scroll efface le texte puis
   // écarte les marches.
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -137,14 +163,13 @@ export default function Offres() {
   return (
     <section
       ref={sectionRef}
-      id="offres"
-      data-nav-dark
+      id="formations"
       style={{ height: `${SECTION_VH}vh` }}
       className="relative bg-black"
     >
       <div className="sticky top-0 h-screen overflow-hidden">
-        {/* Contenu révélé derrière : l'index des postes ouverts */}
-        <OffresIndex
+        {/* Contenu révélé derrière : l'index des modules de formation */}
+        <FormationsIndex
           progress={scrollYProgress}
           revealFrom={OPEN_START}
           revealTo={BANDS_END}
@@ -157,6 +182,9 @@ export default function Offres() {
 
         {/* Titre, qui s'efface avant l'escalier */}
         <TitleOverlay progress={scrollYProgress} />
+
+        {/* Barre de navigation en blanc, seulement tant que le capot la couvre */}
+        <NavDarkWhileCovered progress={scrollYProgress} />
       </div>
     </section>
   );

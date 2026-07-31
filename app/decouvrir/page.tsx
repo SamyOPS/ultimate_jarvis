@@ -5,7 +5,7 @@ import ScrollUpHome from "../components/ScrollUpHome";
 import { ZoomParallax } from "../components/zoom-parallax";
 import ExpertiseGallery from "../components/ExpertiseGallery";
 import Clients from "../components/Clients";
-import Offres from "../components/Offres";
+import Formations from "../components/Formations";
 import ImageBreak from "../components/ImageBreak";
 import Faq from "../components/Faq";
 
@@ -76,8 +76,8 @@ export default function DecouvrirPage() {
       {/* Section clients : le scroll vertical reprend après la galerie */}
       <Clients />
 
-      {/* Section offres : image plein écran + grand titre révélé */}
-      <Offres />
+      {/* Section formations : image plein écran + grand titre révélé */}
+      <Formations />
 
       {/* Image plein écran que le scroll dézoome en mosaïque */}
       <ImageBreak />

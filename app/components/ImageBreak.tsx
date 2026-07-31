@@ -2,7 +2,7 @@
 
 import { ZoomParallax } from "./zoom-parallax";
 
-// Après l'index des offres : on arrive sur une image plein écran, puis le scroll
+// Après l'index des formations : on arrive sur une image plein écran, puis le scroll
 // DÉZOOME et révèle la mosaïque des autres visuels. C'est le `ZoomParallax` des
 // expertises joué à l'envers (`direction="out"`), donc la page ouvre et referme
 // sur le même geste. Images = PLACEHOLDERS.

@@ -55,7 +55,7 @@ function RevealChars({
 const mainLinks = [
   { label: "Accueil", href: "/" },
   { label: "Expertises", href: "/decouvrir#expertises" },
-  { label: "Offres", href: "/decouvrir#offres" },
+  { label: "Formations", href: "/decouvrir#formations" },
   { label: "FAQ", href: "/decouvrir#faq" },
 ];
 
