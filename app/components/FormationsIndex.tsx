@@ -120,7 +120,7 @@ function Row({
       onBlur={() => onHover(false)}
       onClick={onOpen}
       aria-label={`Découvrir le module : ${f.title}`}
-      className={`relative flex h-[18vh] min-h-[86px] shrink-0 cursor-pointer items-center overflow-hidden border-zinc-900/15 text-left ${
+      className={`relative flex h-[24vh] min-h-[110px] shrink-0 cursor-pointer items-center overflow-hidden border-zinc-900/15 text-left ${
         last ? "border-y" : "border-t"
       }`}
     >
@@ -145,7 +145,7 @@ function Row({
           {f.index}
         </span>
 
-        <span className="min-w-0 flex-1 truncate text-[clamp(1rem,5vw,1.5rem)] font-bold uppercase leading-[0.95] tracking-tight sm:text-[clamp(1.25rem,5.4vh,3.75rem)]">
+        <span className="min-w-0 flex-1 truncate text-[clamp(1rem,5vw,1.5rem)] font-bold uppercase leading-[0.95] tracking-tight sm:text-[clamp(1.4rem,6.8vh,4.5rem)]">
           {f.title}
         </span>
 

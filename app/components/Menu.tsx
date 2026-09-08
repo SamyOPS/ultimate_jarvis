@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { usePageTransition } from "./PageTransition";
 import { lockScroll, unlockScroll } from "../lib/scrollLock";
+import { infoLinks, mainLinks } from "../lib/nav";
 
 // Révélation masquée lettre par lettre, pilotée par l'ouverture du panneau.
 // Les mots restent insécables (pas de coupure au milieu d'un mot).
@@ -51,14 +52,6 @@ function RevealChars({
   );
 }
 
-// Liens principaux (gros, à gauche)
-const mainLinks = [
-  { label: "Accueil", href: "/" },
-  { label: "Expertises", href: "/decouvrir#expertises" },
-  { label: "Formations", href: "/decouvrir#formations" },
-  { label: "FAQ", href: "/decouvrir#faq" },
-];
-
 // Bouton « Offres d'emploi » du panneau. La section offres a laissé la place aux
 // formations : il n'y a plus de page dédiée.
 // TODO : remplacer par la future page /offres (et repasser sur <Link> + onNav
@@ -67,16 +60,6 @@ const mainLinks = [
 const JOBS_HREF =
   "mailto:recrutement@jarvis-connect.fr?subject=Candidature%20spontan%C3%A9e";
 
-// Liens secondaires (colonne de droite)
-const infoLinks = [
-  { label: "Mentions légales", href: "/mentions-legales" },
-  { label: "CGU", href: "/cgu" },
-  {
-    label: "Politique de confidentialité",
-    href: "/politique-de-confidentialite",
-  },
-  { label: "S'inscrire à la newsletter", href: "#newsletter" },
-];
 
 export default function Menu() {
   const [open, setOpen] = useState(false);

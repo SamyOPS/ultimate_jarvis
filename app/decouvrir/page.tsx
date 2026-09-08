@@ -8,6 +8,7 @@ import Clients from "../components/Clients";
 import Formations from "../components/Formations";
 import ImageBreak from "../components/ImageBreak";
 import Faq from "../components/Faq";
+import Footer from "../components/Footer";
 
 // Images du parallaxe — PLACEHOLDERS (à remplacer par tes visuels de marque).
 const showcaseImages = [
@@ -43,47 +44,55 @@ const showcaseImages = [
 
 export default function DecouvrirPage() {
   return (
-    <main>
-      {/* Défile vers la section demandée si on arrive avec une cible (#...) */}
-      <ScrollToTarget />
+    <>
+      <main>
+        {/* Défile vers la section demandée si on arrive avec une cible (#...) */}
+        <ScrollToTarget />
 
-      {/* En haut de page, scroller vers le haut ramène à l'accueil */}
-      <ScrollUpHome />
+        {/* En haut de page, scroller vers le haut ramène à l'accueil */}
+        <ScrollUpHome />
 
-      <Menu />
+        <Menu />
 
-      {/* Discours */}
-      <Mission />
+        {/* Discours */}
+        <Mission />
 
-      {/* Parallaxe zoom : sert de transition vers la section expertises.
+        {/* Parallaxe zoom : sert de transition vers la section expertises.
           Le titre « Expertises » se dévoile au fil du scroll pendant le zoom.
           Fond noir → barre en blanc. */}
-      <section data-nav-dark className="relative bg-black">
-        <ZoomParallax images={showcaseImages} title="Expertises" eyebrow="nos" />
+        <section data-nav-dark className="relative bg-black">
+          <ZoomParallax
+            images={showcaseImages}
+            title="Expertises"
+            eyebrow="nos"
+          />
 
-        {/* Cible du lien « Expertises » : positionnée à la fin du zoom (progress
+          {/* Cible du lien « Expertises » : positionnée à la fin du zoom (progress
             ~1, à 200vh sur les 300vh), quand le titre est entièrement affiché. */}
-        <span
-          id="expertises"
-          aria-hidden
-          className="pointer-events-none absolute left-0 top-[200vh]"
-        />
-      </section>
+          <span
+            id="expertises"
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-[200vh]"
+          />
+        </section>
 
-      {/* Détail des expertises : galerie horizontale (fond blanc) */}
-      <ExpertiseGallery />
+        {/* Détail des expertises : galerie horizontale (fond blanc) */}
+        <ExpertiseGallery />
 
-      {/* Section clients : le scroll vertical reprend après la galerie */}
-      <Clients />
+        {/* Section clients : le scroll vertical reprend après la galerie */}
+        <Clients />
 
-      {/* Section formations : image plein écran + grand titre révélé */}
-      <Formations />
+        {/* Section formations : image plein écran + grand titre révélé */}
+        <Formations />
 
-      {/* Image plein écran que le scroll dézoome en mosaïque */}
-      <ImageBreak />
+        {/* Image plein écran que le scroll dézoome en mosaïque */}
+        <ImageBreak />
 
-      {/* FAQ, en clôture de page */}
-      <Faq />
-    </main>
+        {/* FAQ, en clôture de page */}
+        <Faq />
+      </main>
+
+      <Footer />
+    </>
   );
 }
