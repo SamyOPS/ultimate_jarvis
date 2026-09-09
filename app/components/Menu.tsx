@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { usePageTransition } from "./PageTransition";
 import { lockScroll, unlockScroll } from "../lib/scrollLock";
-import { infoLinks, mainLinks } from "../lib/nav";
+import { AUTH_HREF, infoLinks, JOBS_HREF, mainLinks } from "../lib/nav";
 
 // Révélation masquée lettre par lettre, pilotée par l'ouverture du panneau.
 // Les mots restent insécables (pas de coupure au milieu d'un mot).
@@ -52,15 +52,6 @@ function RevealChars({
   );
 }
 
-// Bouton « Offres d'emploi » du panneau. La section offres a laissé la place aux
-// formations : il n'y a plus de page dédiée.
-// TODO : remplacer par la future page /offres (et repasser sur <Link> + onNav
-// pour bénéficier de la transition de page). En attendant, lien fonctionnel vers
-// une candidature par e-mail.
-const JOBS_HREF =
-  "mailto:recrutement@jarvis-connect.fr?subject=Candidature%20spontan%C3%A9e";
-
-
 export default function Menu() {
   const [open, setOpen] = useState(false);
   const [onDark, setOnDark] = useState(false);
@@ -70,7 +61,7 @@ export default function Menu() {
   const [covering, setCovering] = useState(false);
   const close = () => setOpen(false);
   const pathname = usePathname();
-  const { navigate } = usePageTransition();
+  const { navigate, cover } = usePageTransition();
 
   // Ouvre/ferme le panneau. À l'ouverture, on fige son thème selon le fond.
   const toggle = () =>
@@ -148,6 +139,18 @@ export default function Menu() {
         social:
           "border-white/30 text-white/80 hover:border-white hover:text-white",
       };
+
+  // Sortie du site (espace membre, offres) : on couvre d'un voile noir puis on
+  // part, comme pour un changement de page interne. On NE referme pas le
+  // panneau : le voile le recouvre, sans animation de repli. Les raccourcis
+  // d'ouverture en nouvel onglet restent au navigateur.
+  const onExternal = (e: React.MouseEvent, href: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    cover(() => {
+      window.location.href = href;
+    });
+  };
 
   // Clic sur un lien. Le href peut être un chemin, une ancre, ou les deux
   // (ex. "/decouvrir#expertises").
@@ -317,9 +320,9 @@ export default function Menu() {
                     step={22}
                   />
                 </span>
-                <Link
-                  href="/login"
-                  onClick={(e) => onNav(e, "/login")}
+                <a
+                  href={AUTH_HREF}
+                  onClick={(e) => onExternal(e, AUTH_HREF)}
                   className={`inline-flex items-center gap-1 font-medium uppercase tracking-tight transition-colors ${panel.info}`}
                 >
                   <RevealChars
@@ -350,14 +353,14 @@ export default function Menu() {
                       </svg>
                     </span>
                   </span>
-                </Link>
+                </a>
 
                 {/* Offres d'emploi : même traitement que le lien ci-dessus
                     (révélation lettre par lettre puis la flèche), la cascade
                     reprenant là où « Accéder à mon espace » s'arrête. */}
                 <a
                   href={JOBS_HREF}
-                  onClick={close}
+                  onClick={(e) => onExternal(e, JOBS_HREF)}
                   className={`inline-flex items-center gap-1 font-medium uppercase tracking-tight transition-colors ${panel.info}`}
                 >
                   <RevealChars
@@ -395,46 +398,22 @@ export default function Menu() {
 
           {/* Pied : réseaux sociaux en bas à droite */}
           <div className="flex justify-end">
-            <div className="flex gap-3">
-              <a
-                href="https://www.linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
+            <a
+              href="https://www.linkedin.com/company/jarvis-connect/posts/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
+            >
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden
               >
-                <svg
-                  className="h-5 w-5"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden
-                >
-                  <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4 0 4.75 2.65 4.75 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.05 1.4-2.05 2.85V21H10V9Z" />
-                </svg>
-              </a>
-              <a
-                href="https://www.instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors ${panel.social}`}
-              >
-                <svg
-                  className="h-5 w-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
-                </svg>
-              </a>
-            </div>
+                <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4 0 4.75 2.65 4.75 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.05 1.4-2.05 2.85V21H10V9Z" />
+              </svg>
+            </a>
           </div>
         </div>
       </aside>
