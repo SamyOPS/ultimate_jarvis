@@ -7,15 +7,16 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 
-interface Image {
+interface Visual {
   src: string;
   alt?: string;
 }
 
 interface ZoomParallaxProps {
   /** Tableau d'images affichées dans l'effet parallaxe (7 max) */
-  images: Image[];
+  images: Visual[];
   /** Titre révélé lettre par lettre au fil du scroll (optionnel) */
   title?: string;
   /** Petit mot d'accroche, au-dessus à gauche du titre (ex. « nos »). */
@@ -109,11 +110,15 @@ export function ZoomParallax({
               className={`absolute top-0 flex h-full w-full items-center justify-center ${OFFSETS[index] ?? ""}`}
             >
               <div className="relative h-[25vh] w-[25vw]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src || "/placeholder.svg"}
+                {/* Les tuiles sont agrandies jusqu'à ×9 par le zoom : `sizes`
+                    est déclaré à 100vw pour qu'aucune ne soit servie en deçà de
+                    la largeur d'écran, même au plus fort de l'agrandissement. */}
+                <Image
+                  src={src}
                   alt={alt || `Image parallaxe ${index + 1}`}
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
                 />
               </div>
             </motion.div>

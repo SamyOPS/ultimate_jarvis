@@ -6,6 +6,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { lockScroll, unlockScroll } from "../lib/scrollLock";
 import {
@@ -178,28 +179,38 @@ export default function ExpertiseGallery() {
                   aria-label={`Voir le détail : ${it.title}`}
                   className="group relative h-full flex-1 overflow-hidden"
                 >
-                  <motion.img
-                    src={it.image}
-                    alt={it.title}
-                    draggable={false}
+                  {/* Le zoom au survol porte sur un calque : `next/image` en
+                      `fill` gère lui-même son positionnement. */}
+                  <motion.div
                     whileHover={{
                       scale: 1.05,
                       transition: { duration: 0.4, ease: "easeOut" },
                     }}
-                    className={`absolute inset-0 h-full w-full object-cover ${
+                    className={`absolute inset-0 ${
                       openIndex === i ? "opacity-0" : ""
                     }`}
-                  />
+                  >
+                    <Image
+                      src={it.image}
+                      alt={it.title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                      draggable={false}
+                      className="object-cover"
+                    />
+                  </motion.div>
                   <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
                 </button>
 
                 <div className="pointer-events-none relative h-full w-[26%] shrink-0 overflow-hidden sm:w-[24%] lg:w-[22%]">
-                  <motion.img
+                  <Image
                     src={it.image2}
                     alt=""
                     aria-hidden="true"
+                    fill
+                    sizes="(max-width: 1024px) 30vw, 22vw"
                     draggable={false}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="object-cover"
                   />
                 </div>
               </div>
@@ -231,10 +242,7 @@ export default function ExpertiseGallery() {
             onClick={close}
             className="fixed inset-0 z-[80]"
           >
-            <motion.img
-              src={active.image}
-              alt={active.title}
-              draggable={false}
+            <motion.div
               initial={{
                 top: rect.top,
                 left: rect.left,
@@ -257,8 +265,17 @@ export default function ExpertiseGallery() {
                 borderRadius: 12,
               }}
               transition={IMG_TRANSITION}
-              className="fixed object-cover"
-            />
+              className="fixed overflow-hidden"
+            >
+              <Image
+                src={active.image}
+                alt={active.title}
+                fill
+                sizes="100vw"
+                draggable={false}
+                className="object-cover"
+              />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

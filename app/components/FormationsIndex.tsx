@@ -8,6 +8,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { lockScroll, unlockScroll } from "../lib/scrollLock";
 import { CARTE_MERE, DEVELOPPEUR, PROCESSEUR } from "../lib/images";
@@ -299,17 +300,23 @@ function Detail({
 
         {/* Image : bandeau en haut sur mobile, colonne pleine hauteur sur grand écran */}
         <div className="order-1 h-[34vh] overflow-hidden lg:order-2 lg:h-full">
-          <motion.img
+          <motion.div
             key={f.image}
-            src={f.image}
-            alt=""
-            aria-hidden="true"
-            draggable={false}
             initial={{ scale: 1.12 }}
             animate={{ scale: 1 }}
             transition={{ duration: 1.1, ease: EASE }}
-            className="h-full w-full object-cover"
-          />
+            className="relative h-full w-full"
+          >
+            <Image
+              src={f.image}
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              draggable={false}
+              className="object-cover"
+            />
+          </motion.div>
         </div>
       </div>
     </motion.div>
@@ -452,13 +459,17 @@ export default function FormationsIndex({
                 transition={{ duration: 0.45, ease: EASE }}
                 className="overflow-hidden"
               >
-                <motion.img
-                  key={formations[hovered ?? lastHovered].image}
-                  src={formations[hovered ?? lastHovered].image}
-                  alt=""
-                  draggable={false}
-                  className="aspect-[4/5] w-[clamp(150px,13vw,230px)] object-cover"
-                />
+                <div className="relative aspect-[4/5] w-[clamp(150px,13vw,230px)]">
+                  <Image
+                    key={formations[hovered ?? lastHovered].image}
+                    src={formations[hovered ?? lastHovered].image}
+                    alt=""
+                    fill
+                    sizes="230px"
+                    draggable={false}
+                    className="object-cover"
+                  />
+                </div>
               </motion.div>
             </motion.div>
           )}

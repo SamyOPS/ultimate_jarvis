@@ -7,6 +7,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import FormationsIndex, { formations } from "./FormationsIndex";
 import { DEFENSE } from "../lib/images";
@@ -47,12 +48,13 @@ const BLEED = 0.5; // léger chevauchement vertical entre marches (anti-liseré)
 // chaque moitié de chaque marche.
 function Cover() {
   return (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img
+    <Image
       src={DEFENSE.src}
       alt=""
+      fill
+      sizes="100vw"
       draggable={false}
-      className="h-full w-full object-cover brightness-[0.8]"
+      className="object-cover brightness-[0.8]"
     />
   );
 }
