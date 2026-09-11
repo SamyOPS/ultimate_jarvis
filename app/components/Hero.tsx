@@ -64,7 +64,7 @@ export default function Hero() {
     // affiche directement le réacteur allumé. Sinon, filet de sécurité au cas
     // où la vidéo ne se charge pas (autoplay bloqué, erreur réseau…).
     const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
     const delay = reduceMotion ? 0 : 12000;
     const timer = window.setTimeout(ignite, delay);
@@ -281,7 +281,6 @@ export default function Hero() {
           Jarvis Connect
         </h1>
       </div>
-
     </section>
   );
 }

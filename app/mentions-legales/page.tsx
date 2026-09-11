@@ -89,7 +89,8 @@ export default function MentionsLegalesPage() {
               </p>
             ))}
             <p>
-              <strong className="font-semibold text-zinc-900">Site web</strong> :{" "}
+              <strong className="font-semibold text-zinc-900">Site web</strong>{" "}
+              :{" "}
               <a
                 href="https://vercel.com"
                 target="_blank"

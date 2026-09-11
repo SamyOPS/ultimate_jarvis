@@ -8,6 +8,14 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { lockScroll, unlockScroll } from "../lib/scrollLock";
+import {
+  CARTE_MERE,
+  DEFENSE,
+  DEVELOPPEUR,
+  FOND_BLEU,
+  PROCESSEUR,
+  TECHNICIENS,
+} from "../lib/images";
 
 // Expertises présentées en fiches (image + métadonnées + grand titre serif),
 // parcourues par un défilement horizontal piloté par le scroll vertical.
@@ -26,10 +34,8 @@ const items = [
       "Gestion des incidents et des demandes",
     ],
     title: "Support informatique",
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
-    image2:
-      "https://images.unsplash.com/photo-1557683316-973673baf926?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
+    image: TECHNICIENS.src,
+    image2: PROCESSEUR.src,
   },
   {
     index: "02",
@@ -43,10 +49,8 @@ const items = [
       "Maintenance évolutive",
     ],
     title: "Développement",
-    image:
-      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
-    image2:
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
+    image: DEVELOPPEUR.src,
+    image2: CARTE_MERE.src,
   },
   {
     index: "03",
@@ -60,10 +64,8 @@ const items = [
       "Mise en conformité (RGPD)",
     ],
     title: "Cybersécurité",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
-    image2:
-      "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
+    image: PROCESSEUR.src,
+    image2: DEVELOPPEUR.src,
   },
   {
     index: "04",
@@ -77,10 +79,8 @@ const items = [
       "Optimisation des coûts",
     ],
     title: "Infogérance & Cloud",
-    image:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&h=1000&fit=crop&crop=entropy&auto=format&q=80",
-    image2:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
+    image: DEFENSE.src,
+    image2: FOND_BLEU.src,
   },
 ];
 
@@ -115,7 +115,7 @@ export default function ExpertiseGallery() {
   const x = useTransform(
     scrollYProgress,
     [0, 0.96],
-    ["0vw", `-${(items.length - 1) * panelVw}vw`]
+    ["0vw", `-${(items.length - 1) * panelVw}vw`],
   );
 
   // Détail plein écran. On mémorise la position/taille exacte de l'image

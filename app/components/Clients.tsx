@@ -17,17 +17,29 @@ import { useEffect, useRef, useState } from "react";
 const logos: { src: string; alt: string; invert: boolean; big?: boolean }[] = [
   { src: "/Image/logo_client/3M.png", alt: "3M", invert: true },
   { src: "/Image/logo_client/barriere.png", alt: "Barrière", invert: true },
-  { src: "/Image/logo_client/bnp%20paribas.png", alt: "BNP Paribas", invert: true },
+  {
+    src: "/Image/logo_client/bnp%20paribas.png",
+    alt: "BNP Paribas",
+    invert: true,
+  },
   { src: "/Image/logo_client/groupe-bpce.png", alt: "BPCE", invert: true },
   { src: "/Image/logo_client/burberry.png", alt: "Burberry", invert: true },
   { src: "/Image/logo_client/cgi.png", alt: "CGI", invert: true },
-  { src: "/Image/logo_client/bureau_veritas.png", alt: "Bureau Veritas", invert: true },
+  {
+    src: "/Image/logo_client/bureau_veritas.png",
+    alt: "Bureau Veritas",
+    invert: true,
+  },
   { src: "/Image/logo_client/engie.png", alt: "Engie", invert: true },
   { src: "/Image/logo_client/ethypharm.png", alt: "Ethypharm", invert: true },
   { src: "/Image/logo_client/foncia.png", alt: "Foncia", invert: true },
   { src: "/Image/logo_client/hp.png", alt: "HP", invert: false },
   { src: "/Image/logo_client/inli.png", alt: "In'li", invert: true },
-  { src: "/Image/logo_client/les_mousquetaires.png", alt: "Les Mousquetaires", invert: true },
+  {
+    src: "/Image/logo_client/les_mousquetaires.png",
+    alt: "Les Mousquetaires",
+    invert: true,
+  },
   { src: "/Image/logo_client/riccobono.png", alt: "Riccobono", invert: true },
   { src: "/Image/logo_client/lvmh.png", alt: "LVMH", invert: true },
   { src: "/Image/logo_client/sisley.png", alt: "Sisley", invert: true },
@@ -35,8 +47,18 @@ const logos: { src: string; alt: string; invert: boolean; big?: boolean }[] = [
   { src: "/Image/logo_client/stihl.png", alt: "Stihl", invert: false },
   { src: "/Image/logo_client/tpicap.png", alt: "TP ICAP", invert: true },
   { src: "/Image/logo_client/uniqlo.png", alt: "Uniqlo", invert: false },
-  { src: "/Image/logo_client/apprentis-auteuil.png", alt: "Apprentis d'Auteuil", invert: true, big: true },
-  { src: "/Image/logo_client/jacquemus.png", alt: "Jacquemus", invert: true, big: true },
+  {
+    src: "/Image/logo_client/apprentis-auteuil.png",
+    alt: "Apprentis d'Auteuil",
+    invert: true,
+    big: true,
+  },
+  {
+    src: "/Image/logo_client/jacquemus.png",
+    alt: "Jacquemus",
+    invert: true,
+    big: true,
+  },
 ];
 
 const row1 = logos.slice(0, 7);
@@ -87,7 +109,9 @@ function Logo({
           alt={alt}
           draggable={false}
           className={`w-auto max-w-[190px] object-contain ${
-            big ? "h-10 sm:h-14 lg:h-16 2xl:h-20" : "h-6 sm:h-9 lg:h-10 2xl:h-12"
+            big
+              ? "h-10 sm:h-14 lg:h-16 2xl:h-20"
+              : "h-6 sm:h-9 lg:h-10 2xl:h-12"
           } ${invert ? "brightness-0" : "mix-blend-multiply"}`}
         />
       </button>
@@ -182,7 +206,11 @@ export default function Clients() {
   }, [active]);
 
   return (
-    <section ref={ref} id="clients" className="bg-white pb-8 sm:pb-16 lg:pb-20 2xl:pb-32">
+    <section
+      ref={ref}
+      id="clients"
+      className="bg-white pb-8 sm:pb-16 lg:pb-20 2xl:pb-32"
+    >
       <div className="px-6 pt-6 sm:px-12 sm:pt-10 lg:pt-12 2xl:pt-16">
         <p className="font-quote text-2xl text-zinc-900 sm:text-3xl lg:text-4xl 2xl:text-5xl">
           Ils nous font confiance
@@ -193,7 +221,14 @@ export default function Clients() {
         {/* Défilement auto (scroll) + glisser à la main + clic = nom */}
         <Row x={x1} items={row1} onOpen={open} activeId={activeId} rowId="r1" />
         <Row x={x2} items={row2} onOpen={open} activeId={activeId} rowId="r2" />
-        <Row x={x3} items={row3} last onOpen={open} activeId={activeId} rowId="r3" />
+        <Row
+          x={x3}
+          items={row3}
+          last
+          onOpen={open}
+          activeId={activeId}
+          rowId="r3"
+        />
       </div>
 
       {/* Capteur de clic plein écran pour fermer (transparent) */}

@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { lockScroll, unlockScroll } from "../lib/scrollLock";
+import { CARTE_MERE, DEVELOPPEUR, PROCESSEUR } from "../lib/images";
 
 // Contenu révélé derrière le capot en escalier (composant Formations) : un index
 // typographique des modules, pas une liste.
@@ -52,8 +53,7 @@ export const formations: Formation[] = [
       "Communication utilisateur",
       "Standards ITIL",
     ],
-    image:
-      "https://images.unsplash.com/photo-1557683316-973673baf926?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
+    image: PROCESSEUR.src,
   },
   {
     index: "02",
@@ -62,14 +62,8 @@ export const formations: Formation[] = [
     duree: "1 jour",
     public: "Équipes IT",
     desc: "Prise en main des outils de ticketing, supervision, MDM et automatisation pour gagner en efficacité.",
-    programme: [
-      "Outils de ticketing",
-      "Supervision",
-      "MDM",
-      "Automatisation",
-    ],
-    image:
-      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
+    programme: ["Outils de ticketing", "Supervision", "MDM", "Automatisation"],
+    image: DEVELOPPEUR.src,
   },
   {
     index: "03",
@@ -84,14 +78,13 @@ export const formations: Formation[] = [
       "Scripts d'intervention",
       "Relation utilisateur",
     ],
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&h=1200&fit=crop&crop=entropy&auto=format&q=80",
+    image: CARTE_MERE.src,
   },
 ];
 
 const mailto = (f: Formation) =>
   `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    `Formation — ${f.title}`
+    `Formation — ${f.title}`,
   )}`;
 
 // Une ligne de l'index. Le survol est piloté par l'état du parent (et non par
@@ -416,7 +409,7 @@ export default function FormationsIndex({
             <div className="mt-8 flex shrink-0 justify-center px-5 sm:mt-10">
               <a
                 href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-                  "Formations"
+                  "Formations",
                 )}`}
                 className="group relative inline-flex items-baseline gap-2 sm:gap-3"
               >

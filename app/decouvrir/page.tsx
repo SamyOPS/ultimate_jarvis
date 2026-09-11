@@ -8,39 +8,17 @@ import Clients from "../components/Clients";
 import Formations from "../components/Formations";
 import ImageBreak from "../components/ImageBreak";
 import Faq from "../components/Faq";
+import { DEFENSE, ILLUSTRATIONS } from "../lib/images";
 import Footer from "../components/Footer";
 
-// Images du parallaxe — PLACEHOLDERS (à remplacer par tes visuels de marque).
-const showcaseImages = [
-  {
-    src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
-    alt: "Architecture moderne",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
-    alt: "Ville au coucher du soleil",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1557683316-973673baf926?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80",
-    alt: "Motif géométrique abstrait",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
-    alt: "Paysage de montagne",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80",
-    alt: "Éléments de design minimaliste",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
-    alt: "Vagues et plage",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
-    alt: "Forêt et lumière",
-  },
-];
+// Le premier cadre est celui sur lequel le zoom se referme, titre « nos
+// Expertises » par-dessus : c'est l'image de la section. Les six autres
+// composent la mosaïque autour — La Défense en est retirée pour ne pas s'y
+// répéter, et la liste est complétée pour garder sept cadres.
+const others = ILLUSTRATIONS.filter((img) => img !== DEFENSE);
+const showcaseImages = Array.from({ length: 7 }, (_, i) =>
+  i === 0 ? DEFENSE : others[(i - 1) % others.length],
+);
 
 export default function DecouvrirPage() {
   return (

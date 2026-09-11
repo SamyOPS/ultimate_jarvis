@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import { useRef, useState } from "react";
 import FormationsIndex, { formations } from "./FormationsIndex";
+import { DEFENSE } from "../lib/images";
 
 // Réglages. Le capot est épinglé sur 100vh : la section mesure SECTION_VH, donc
 // il reste SCROLL_VH de scroll utile, que `scrollYProgress` mappe sur 0 → 1.
@@ -48,7 +49,7 @@ function Cover() {
   return (
     /* eslint-disable-next-line @next/next/no-img-element */
     <img
-      src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&h=1280&fit=crop&crop=entropy&auto=format&q=80"
+      src={DEFENSE.src}
       alt=""
       draggable={false}
       className="h-full w-full object-cover brightness-[0.8]"
@@ -125,7 +126,8 @@ function NavDarkWhileCovered({ progress }: { progress: MotionValue<number> }) {
 function TitleOverlay({ progress }: { progress: MotionValue<number> }) {
   const [hidden, setHidden] = useState(false);
   useMotionValueEvent(progress, "change", (v) => {
-    if (v >= TITLE_HIDE_AT) setHidden(true); // seuil haut → on masque
+    if (v >= TITLE_HIDE_AT)
+      setHidden(true); // seuil haut → on masque
     else if (v <= TITLE_SHOW_AT) setHidden(false); // seuil bas → on réaffiche
     // entre les deux : on ne touche à rien (hystérésis)
   });

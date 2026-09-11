@@ -58,8 +58,8 @@ export default function CguPage() {
               </p>
             ))}
             <p className="mt-3">
-              Pour l&apos;ensemble des informations relatives à l&apos;éditeur et
-              à l&apos;hébergeur, consultez les{" "}
+              Pour l&apos;ensemble des informations relatives à l&apos;éditeur
+              et à l&apos;hébergeur, consultez les{" "}
               <Link
                 href="/mentions-legales"
                 className="underline underline-offset-2 hover:text-zinc-900"

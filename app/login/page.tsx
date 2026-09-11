@@ -6,9 +6,7 @@ export default function LoginPage() {
       <h1 className="text-3xl font-bold uppercase tracking-tight text-zinc-900">
         Connexion
       </h1>
-      <p className="max-w-md text-zinc-600">
-        Page de connexion à venir.
-      </p>
+      <p className="max-w-md text-zinc-600">Page de connexion à venir.</p>
       <Link
         href="/"
         className="rounded-full border border-zinc-300 px-6 py-2 font-medium text-zinc-700 transition-colors hover:border-zinc-900 hover:text-zinc-900"

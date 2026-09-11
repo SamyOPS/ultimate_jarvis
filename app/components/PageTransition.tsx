@@ -72,7 +72,7 @@ export default function PageTransition({
       }
       window.setTimeout(() => router.push(href), DURATION);
     },
-    [pathname, router, contentY]
+    [pathname, router, contentY],
   );
 
   const cover = useCallback((action?: () => void) => {

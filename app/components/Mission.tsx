@@ -90,7 +90,7 @@ export default function Mission() {
           io.disconnect();
         }
       },
-      { threshold: 0.35 }
+      { threshold: 0.35 },
     );
     io.observe(el);
     return () => io.disconnect();
